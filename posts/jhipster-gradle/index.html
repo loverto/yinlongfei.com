@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Jhipster 项目之架构分析之build.gradle - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="Jhipster 项目之架构分析之build.gradle" />
+  <meta name="twitter:title" content="Jhipster 项目之架构分析之build.gradle" />
+  <meta name="description" content="java开发的项目用gradle来管理项目依赖，项目开发，我们这里面还有前端的一些东西，这些东西在不同平台上如何处理，比如window上的空格跟linux上的处理方式就不同该怎么办？jhipster通过他们丰富的经验在这里给出了模板 下面我们会详细的讲解他们这座做的原因
+// 导入操作系统类，方便针对个别系统进行处理，比如window下的空格，就需要判断操作系统 import org.gradle.internal.os.OperatingSystem // buildscript { //定义的仓库 repositories { // mavnen的本地仓库 mavenLocal() // maven的中央仓库 mavenCentral() // spring的plugin 插件库 maven { url &quot;http://repo.spring.io/plugins-release&quot; } // spring的里程碑库 maven { url &quot;https://plugins.gradle.org/m2/&quot; } } //定义的依赖类路径 dependencies { // 插件依赖， classpath &quot;org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}&quot; classpath &quot;io.spring.gradle:propdeps-plugin:0.0.10.RELEASE&quot; classpath &quot;gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2&quot; //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here } } // 应用的插件 plugins { // 代码质量检查插件 id &quot;org.sonarqube&quot; version &quot;2.6.2&quot; // 为什么这个地方会用apt的eclipse插件，可能为了方便把项目导入到eclipse，那么apt是什么东西呢 id &quot;net.">
+  <meta property="og:description" content="java开发的项目用gradle来管理项目依赖，项目开发，我们这里面还有前端的一些东西，这些东西在不同平台上如何处理，比如window上的空格跟linux上的处理方式就不同该怎么办？jhipster通过他们丰富的经验在这里给出了模板 下面我们会详细的讲解他们这座做的原因
+// 导入操作系统类，方便针对个别系统进行处理，比如window下的空格，就需要判断操作系统 import org.gradle.internal.os.OperatingSystem // buildscript { //定义的仓库 repositories { // mavnen的本地仓库 mavenLocal() // maven的中央仓库 mavenCentral() // spring的plugin 插件库 maven { url &quot;http://repo.spring.io/plugins-release&quot; } // spring的里程碑库 maven { url &quot;https://plugins.gradle.org/m2/&quot; } } //定义的依赖类路径 dependencies { // 插件依赖， classpath &quot;org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}&quot; classpath &quot;io.spring.gradle:propdeps-plugin:0.0.10.RELEASE&quot; classpath &quot;gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2&quot; //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here } } // 应用的插件 plugins { // 代码质量检查插件 id &quot;org.sonarqube&quot; version &quot;2.6.2&quot; // 为什么这个地方会用apt的eclipse插件，可能为了方便把项目导入到eclipse，那么apt是什么东西呢 id &quot;net.">
+  <meta name="twitter:description" content="java开发的项目用gradle来管理项目依赖，项目开发，我们这里面还有前端的一些东西，这些东西在不同平台上如何处理，比如window上的空格跟linux上的处理方式就不同该怎么办？jhipster通过他们丰富的经验在这里给出了模板 下面我们会详细的讲解他们这座做的原因
+// 导入操作系统类，方便针对个别系统进行处理，比如window下的空格，就需要判断操作系统 import …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/jhipster-gradle/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/jhipster-gradle/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Jhipster 项目之架构分析之build.gradle</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">1000 Words|Read in about 5 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    
+  </aside>
+  
+
+
+                <p>java开发的项目用gradle来管理项目依赖，项目开发，我们这里面还有前端的一些东西，这些东西在不同平台上如何处理，比如window上的空格跟linux上的处理方式就不同该怎么办？jhipster通过他们丰富的经验在这里给出了模板
+下面我们会详细的讲解他们这座做的原因</p>
+
+<pre><code class="language-gradle">// 导入操作系统类，方便针对个别系统进行处理，比如window下的空格，就需要判断操作系统
+import org.gradle.internal.os.OperatingSystem
+
+// 
+buildscript {
+    //定义的仓库
+    repositories {
+        // mavnen的本地仓库
+        mavenLocal()
+        // maven的中央仓库
+        mavenCentral()
+        // spring的plugin 插件库
+        maven { url &quot;http://repo.spring.io/plugins-release&quot; }
+        // spring的里程碑库
+        maven { url &quot;https://plugins.gradle.org/m2/&quot; }
+    }
+    //定义的依赖类路径
+    dependencies {
+        // 插件依赖，
+        classpath &quot;org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}&quot;
+        classpath &quot;io.spring.gradle:propdeps-plugin:0.0.10.RELEASE&quot;
+        classpath &quot;gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2&quot;
+        //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
+    }
+}
+// 应用的插件
+plugins {
+    // 代码质量检查插件
+    id &quot;org.sonarqube&quot; version &quot;2.6.2&quot;
+    // 为什么这个地方会用apt的eclipse插件，可能为了方便把项目导入到eclipse，那么apt是什么东西呢
+    id &quot;net.ltgt.apt-eclipse&quot; version &quot;0.19&quot;
+    // apt 插件 idea版本的 AnnotationProcessingTool
+    id &quot;net.ltgt.apt-idea&quot; version &quot;0.19&quot;
+    // apt 插件
+    id &quot;net.ltgt.apt&quot; version &quot;0.19&quot;
+    // Spring依赖管理插件，可以不用再关心版本，只关心引用
+    id &quot;io.spring.dependency-management&quot; version &quot;1.0.6.RELEASE&quot;
+    // node 插件，可以在gradle的任务中执行nodejs的任务，本质上是嵌入了一个nodejs
+    id &quot;com.moowork.node&quot; version &quot;1.2.0&quot;
+    // 数据库版本控制工具的gradle插件，
+    id 'org.liquibase.gradle' version '2.0.1'
+    //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
+    // lombok 一个根据注释动态生成代码工具，jhipster官方不建议用，这个，原因容易出现难以复现的bug
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+}
+
+// 应用插件
+apply plugin: 'java'
+// Apt 处理注解，在运行时生成java代码，比如lombok，和mapstruct这个几个技术
+apply plugin: 'net.ltgt.apt'
+// 设定源码版本
+sourceCompatibility=1.8
+// 设置并以后class的jvm版本
+targetCompatibility=1.8
+// Until JHipster supports JDK 9
+assert System.properties['java.specification.version'] == '1.8'
+
+// maven 插件
+apply plugin: 'maven'
+// 引用springboot 的插件
+apply plugin: 'org.springframework.boot'
+// web项目，所以要应用war插件，来生成war包
+apply plugin: 'war'
+// 忘了这个是干嘛的
+// 为Gradle 提供附加optional和provided依赖配置以及生成Maven POM支持。
+apply plugin: 'propdeps'
+// node插件
+apply plugin: 'com.moowork.node'
+// Spring 依赖管理
+apply plugin: 'io.spring.dependency-management'
+// idea 插件
+apply plugin: 'idea'
+
+//依赖管理导入
+dependencyManagement {
+  imports {
+    mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
+    //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
+  }
+}
+
+// 默认任务
+defaultTasks 'bootRun'
+// 声明项目的group 名称，该值同maven中的groupid一样
+group = 'org.ylf.demo'
+// 声明项目的版本号，方便项目管理
+version = '0.0.1-SNAPSHOT'
+// 项目描述
+description = ''
+// Spring Boot如果生成war可执行包时，需要一个可执行的主类
+bootWar {
+   mainClassName = 'org.ylf.demo.DemoApp'
+}
+// war包任务，配置
+war {
+    // 设置webapp的目录文件
+    webAppDirName = 'build/www/'
+    // 是否启用，默认应该是没启用
+    enabled = true
+    // 指定war包的后缀格式
+    classifier = 'original'
+}
+// SpringBoot 任务
+springBoot {
+    // 指定主类方法
+    mainClassName = 'org.ylf.demo.DemoApp'
+    //构建信息
+    buildInfo()
+}
+
+// 处理操作系统版本，在window下处理空格，如果不把空格转换为UTF-8字符的话，Java运行时会报错
+if (OperatingSystem.current().isWindows()) {
+    // https://stackoverflow.com/questions/40037487/the-filename-or-extension-is-too-long-error-using-gradle
+    task classpathJar(type: Jar) {
+        dependsOn configurations.runtime
+        appendix = 'classpath'
+
+        doFirst {
+            manifest {
+                attributes 'Class-Path': configurations.runtime.files.collect {
+                    it.toURI().toURL().toString().replaceFirst(/file:\/+/, '/').replaceAll(' ', '%20')
+                }.join(' ')
+            }
+        }
+    }
+
+    bootRun {
+        dependsOn classpathJar
+        doFirst {
+            classpath = files(&quot;$buildDir/classes/java/main&quot;, &quot;$buildDir/resources/main&quot;, classpathJar.archivePath)
+        }
+    }
+}
+// 测试任务
+test {
+    // 排除行为测试
+    exclude '**/CucumberTest*'
+
+    // uncomment if the tests reports are not generated
+    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+    // ignoreFailures true
+    reports.html.enabled = false
+}
+//行为测试
+task cucumberTest(type: Test) {
+    // 行为测试描述
+    description = &quot;Execute cucumber BDD tests.&quot;
+    // 校验
+    group = &quot;verification&quot;
+    //包含那些的
+    include '**/CucumberTest*'
+
+    // uncomment if the tests reports are not generated
+    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+    // ignoreFailures true
+    reports.html.enabled = false
+}
+// 检查需要依赖 行为测试
+check.dependsOn cucumberTest
+// 测试报告
+task testReport(type: TestReport) {
+    // 指定测试报告路径
+    destinationDir = file(&quot;$buildDir/reports/tests&quot;)
+    reportOn test
+}
+
+// 行为测试报告
+task cucumberTestReport(type: TestReport) {
+    // 指定行为测试报告路径
+    destinationDir = file(&quot;$buildDir/reports/tests&quot;)
+    reportOn cucumberTest
+}
+
+// 引用docker的gradle配置
+apply from: 'gradle/docker.gradle'
+//  引用质量分析的的gradle配置
+apply from: 'gradle/sonar.gradle'
+//jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
+
+
+// 通过判断系统属性来设置引用
+if (project.hasProperty('prod')) {
+    apply from: 'gradle/profile_prod.gradle'
+} else {
+    apply from: 'gradle/profile_dev.gradle'
+}
+
+// liquibase的配置，如果没有指定具体用那个就默认用main的配置
+if (!project.hasProperty('runList')) {
+    project.ext.runList = 'main'
+}
+// liquibase生成changelog文件的目录及生成文件的命名格式
+project.ext.diffChangelogFile = 'src/main/resources/config/liquibase/changelog/' + new Date().format('yyyyMMddHHmmss') + '_changelog.xml'
+// liquibase任务的配置
+liquibase {
+    //激活
+    activities {
+        // main 配置
+        main {
+            // 驱动类
+            driver 'org.h2.Driver'
+            // jdbc配置
+            url 'jdbc:h2:file:./target/h2db/db/demo'
+            // 用户名
+            username 'demo'
+            // 密码
+            password ''
+            // changelog文件
+            changeLogFile 'src/main/resources/config/liquibase/master.xml'
+            // 默认的schema
+            defaultSchemaName ''
+            // 日志级别为debug
+            logLevel 'debug'
+            //  类路径
+            classpath 'src/main/resources/'
+        }
+        // 日志差异
+        diffLog {
+            // jdbc驱动类
+            driver 'org.h2.Driver'
+            // jdbc url
+            url 'jdbc:h2:file:./target/h2db/db/demo'
+            // 数据库用户名
+            username 'demo'
+            // 数据库密码
+            password ''
+            // 生成差异日志的文件
+            changeLogFile project.ext.diffChangelogFile
+            // 引用url            // hibernate 物理命名策略   表名，字段为小写，当有大写字母的时候会转换为分隔符号“_”。         // hibernate 隐式命名策略
+            referenceUrl 'hibernate:spring:org.ylf.demo.domain?dialect=org.hibernate.dialect.H2Dialect&amp;amp; hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;amp; hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+            defaultSchemaName ''
+            // 日志级别
+            logLevel 'debug'
+            // 类路径
+            classpath &quot;$buildDir/classes/java/main&quot;
+        }
+    }
+    // 运行List
+    runList = project.ext.runList
+}
+
+// 配置
+configurations {
+    // 由运行环境提供
+    providedRuntime
+    // 排除tomcat
+    compile.exclude module: &quot;spring-boot-starter-tomcat&quot;
+}
+
+// 仓库
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    //jhipster-needle-gradle-repositories - JHipster will add additional repositories
+}
+
+dependencies {
+    // Use &quot;, version: jhipster_dependencies_version, changing: true&quot; if you want
+    // to use a SNAPSHOT release instead of a stable release
+    compile group: &quot;io.github.jhipster&quot;, name: &quot;jhipster-framework&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-cache&quot;
+    compile &quot;io.dropwizard.metrics:metrics-core&quot;
+    compile &quot;io.dropwizard.metrics:metrics-jcache&quot;
+    compile &quot;io.dropwizard.metrics:metrics-json&quot;
+    compile &quot;io.dropwizard.metrics:metrics-jvm&quot;
+    compile &quot;io.dropwizard.metrics:metrics-servlet&quot;
+    compile &quot;io.dropwizard.metrics:metrics-servlets&quot;
+    compile &quot;io.prometheus:simpleclient&quot;
+    compile &quot;io.prometheus:simpleclient_dropwizard&quot;
+    compile &quot;io.prometheus:simpleclient_servlet&quot;
+    compile &quot;net.logstash.logback:logstash-logback-encoder&quot;
+    compile &quot;com.fasterxml.jackson.datatype:jackson-datatype-hppc&quot;
+    compile &quot;com.fasterxml.jackson.datatype:jackson-datatype-jsr310&quot;
+    compile &quot;com.fasterxml.jackson.datatype:jackson-datatype-hibernate5&quot;
+    compile &quot;com.fasterxml.jackson.core:jackson-annotations&quot;
+    compile &quot;com.fasterxml.jackson.core:jackson-databind&quot;
+    compile &quot;com.fasterxml.jackson.module:jackson-module-afterburner&quot;
+    compile &quot;com.ryantenney.metrics:metrics-spring&quot;
+    compile &quot;javax.cache:cache-api&quot;
+    compile &quot;org.hibernate:hibernate-core&quot;
+    compile &quot;com.zaxxer:HikariCP&quot;
+    compile &quot;org.apache.commons:commons-lang3&quot;
+    compile &quot;commons-io:commons-io&quot;
+    compile &quot;javax.transaction:javax.transaction-api&quot;
+    compile &quot;org.ehcache:ehcache&quot;
+    compile &quot;org.hibernate:hibernate-jcache&quot;
+    compile &quot;org.hibernate:hibernate-entitymanager&quot;
+    compile &quot;org.hibernate:hibernate-envers&quot;
+    compile &quot;org.hibernate.validator:hibernate-validator&quot;
+    compile &quot;org.liquibase:liquibase-core&quot;
+    compile &quot;com.mattbertolini:liquibase-slf4j&quot;
+    liquibaseRuntime &quot;org.liquibase:liquibase-core&quot;
+    liquibaseRuntime &quot;org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}&quot;
+    liquibaseRuntime sourceSets.main.compileClasspath
+    compile &quot;org.springframework.boot:spring-boot-loader-tools&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-mail&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-logging&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-actuator&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-aop&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-data-jpa&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-security&quot;
+    compile (&quot;org.springframework.boot:spring-boot-starter-web&quot;) {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    compile &quot;org.springframework.boot:spring-boot-starter-undertow&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-thymeleaf&quot;
+    compile &quot;org.zalando:problem-spring-web:0.24.0-RC.0&quot;
+    compile &quot;org.springframework.boot:spring-boot-starter-cloud-connectors&quot;
+    compile &quot;org.springframework.security:spring-security-config&quot;
+    compile &quot;org.springframework.security:spring-security-data&quot;
+    compile &quot;org.springframework.security:spring-security-web&quot;
+    compile &quot;io.jsonwebtoken:jjwt-api&quot;
+    runtime &quot;io.jsonwebtoken:jjwt-impl&quot;
+    runtime &quot;io.jsonwebtoken:jjwt-jackson&quot;
+    compile (&quot;io.springfox:springfox-swagger2&quot;) {
+        exclude module: 'mapstruct'
+    }
+    compile &quot;io.springfox:springfox-bean-validators&quot;
+    compile &quot;mysql:mysql-connector-java&quot;
+    liquibaseRuntime &quot;mysql:mysql-connector-java&quot;
+    compile &quot;org.mapstruct:mapstruct-jdk8:${mapstruct_version}&quot;
+    annotationProcessor &quot;org.mapstruct:mapstruct-processor:${mapstruct_version}&quot;
+    annotationProcessor &quot;org.hibernate:hibernate-jpamodelgen&quot;
+    annotationProcessor (&quot;org.springframework.boot:spring-boot-configuration-processor&quot;) {
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
+    testCompile &quot;com.jayway.jsonpath:json-path&quot;
+    testCompile &quot;io.cucumber:cucumber-junit&quot;
+    testCompile &quot;io.cucumber:cucumber-spring&quot;
+    testCompile (&quot;org.springframework.boot:spring-boot-starter-test&quot;) {
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
+    testCompile &quot;org.springframework.security:spring-security-test&quot;
+    testCompile &quot;org.springframework.boot:spring-boot-test&quot;
+    testCompile &quot;org.assertj:assertj-core&quot;
+    testCompile &quot;junit:junit&quot;
+    testCompile &quot;org.mockito:mockito-core&quot;
+    testCompile &quot;com.mattbertolini:liquibase-slf4j&quot;
+    testCompile &quot;org.hamcrest:hamcrest-library&quot;
+    testCompile &quot;com.h2database:h2&quot;
+    liquibaseRuntime &quot;com.h2database:h2&quot;
+    //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+
+
+    compile &quot;com.alipay.sdk:alipay-sdk-java:3.4.49.ALL&quot;
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    compile group: 'javax.interceptor', name: 'javax.interceptor-api', version: '1.2'
+    // https://mvnrepository.com/artifact/cn.minsin/mutils-spring-boot-starter
+    compile group: 'com.github.wxpay', name: 'wxpay-sdk', version: '0.0.3'
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
+
+}
+
+// 清理资源
+task cleanResources(type: Delete) {
+    // 删除清理资源
+    delete 'build/resources'
+}
+
+// 设置 gradle 的版本
+wrapper {
+    gradleVersion = '4.10.2'
+}
+
+// stage任务依赖bootWar
+task stage(dependsOn: 'bootWar') {
+}
+
+// 如果由nodeInstall属性的话，就设置node的属性
+if (project.hasProperty('nodeInstall')) {
+    node {
+        version = &quot;${node_version}&quot;
+        npmVersion = &quot;${npm_version}&quot;
+        yarnVersion = &quot;${yarn_version}&quot;
+        download = true
+    }
+}
+
+bootWar.dependsOn war
+compileJava.dependsOn processResources
+processResources.dependsOn cleanResources,bootBuildInfo
+bootBuildInfo.mustRunAfter cleanResources
+
+</code></pre>
+
+<p>这个配置文件，主要配置了Node和SpringBoot相关的配置，还有liquibase的配置，以及gradle的wrapper的版本信息，以及单元测试和行为测试的相关配置，中间还根据情况引用了docker的配置和sonar的配置。这个例子做的相当全面，是一个全面的教材之一。本篇博客的介绍内容就到这里，具体的信息就看配置文件中的注释</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/jhipster-gitattribute/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之gitattributes">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/jhipster-angular-cli/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之angular.json">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">1000 Words|Read in about 5 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

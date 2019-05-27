@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> SpringBootServletInitializer如何实现web.xml解析 - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="SpringBootServletInitializer如何实现web.xml解析" />
+  <meta name="twitter:title" content="SpringBootServletInitializer如何实现web.xml解析" />
+  <meta name="description" content="SpringBootServletInitializer  源码分析如何实现SpringBootServletInitializer整个加载过程 实现自定义WebApplicationInitializer配置加载 实现自定义ServletContainerInitializer配置加载
+  示例代码  首先web.xml主要配置各种servlet,filter,listener等,如常见的Log4jConfigListener,OpenSessionInViewFilter,CharacterEncodingFilter,DispatcherServlet等,此大部分信息均是容器启动时加载. 在SpringBoot中我们从SpringBootServletInitializer源码入手:
+public abstract class SpringBootServletInitializer implements WebApplicationInitializer { @Override public void onStartup(ServletContext servletContext) throws ServletException { // Logger initialization is deferred in case a ordered // LogServletContextInitializer is being used this.logger = LogFactory.getLog(getClass()); WebApplicationContext rootAppContext = createRootApplicationContext( servletContext); if (rootAppContext != null) { servletContext.addListener(new ContextLoaderListener(rootAppContext) { @Override public void contextInitialized(ServletContextEvent event) { // no-op because the application context is already initialized } }); } else { this.">
+  <meta property="og:description" content="SpringBootServletInitializer  源码分析如何实现SpringBootServletInitializer整个加载过程 实现自定义WebApplicationInitializer配置加载 实现自定义ServletContainerInitializer配置加载
+  示例代码  首先web.xml主要配置各种servlet,filter,listener等,如常见的Log4jConfigListener,OpenSessionInViewFilter,CharacterEncodingFilter,DispatcherServlet等,此大部分信息均是容器启动时加载. 在SpringBoot中我们从SpringBootServletInitializer源码入手:
+public abstract class SpringBootServletInitializer implements WebApplicationInitializer { @Override public void onStartup(ServletContext servletContext) throws ServletException { // Logger initialization is deferred in case a ordered // LogServletContextInitializer is being used this.logger = LogFactory.getLog(getClass()); WebApplicationContext rootAppContext = createRootApplicationContext( servletContext); if (rootAppContext != null) { servletContext.addListener(new ContextLoaderListener(rootAppContext) { @Override public void contextInitialized(ServletContextEvent event) { // no-op because the application context is already initialized } }); } else { this.">
+  <meta name="twitter:description" content="SpringBootServletInitializer  源码分析如何实现SpringBootServletInitializer整个加载过程 实现自定义WebApplicationInitializer配置加载 实现自定义ServletContainerInitializer配置加载
+  示例代码  首先web.xml主要配置各种servlet,filter,listener等,如常见 …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/springbootservletinitializer%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0web.xml%E8%A7%A3%E6%9E%90/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/springbootservletinitializer%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0web.xml%E8%A7%A3%E6%9E%90/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">SpringBootServletInitializer如何实现web.xml解析</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jul 25, 2016</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                
+
+<h1 id="springbootservletinitializer">SpringBootServletInitializer</h1>
+
+<ol>
+<li>源码分析如何实现SpringBootServletInitializer整个加载过程</li>
+<li>实现自定义WebApplicationInitializer配置加载</li>
+<li>实现自定义ServletContainerInitializer配置加载<br /></li>
+</ol>
+
+<h2 id="示例代码">示例代码</h2>
+
+<ol>
+<li>首先web.xml主要配置各种servlet,filter,listener等,如常见的Log4jConfigListener,OpenSessionInViewFilter,CharacterEncodingFilter,DispatcherServlet等,此大部分信息均是容器启动时加载.</li>
+
+<li><p>在SpringBoot中我们从SpringBootServletInitializer源码入手:</p>
+
+<pre><code class="language-java">public abstract class SpringBootServletInitializer implements WebApplicationInitializer {
+@Override
+	public void onStartup(ServletContext servletContext) throws ServletException {
+		// Logger initialization is deferred in case a ordered
+		// LogServletContextInitializer is being used
+		this.logger = LogFactory.getLog(getClass());
+		WebApplicationContext rootAppContext = createRootApplicationContext(
+				servletContext);
+		if (rootAppContext != null) {
+			servletContext.addListener(new ContextLoaderListener(rootAppContext) {
+				@Override
+				public void contextInitialized(ServletContextEvent event) {
+					// no-op because the application context is already initialized
+				}
+			});
+		}
+		else {
+			this.logger.debug(&quot;No ContextLoaderListener registered, as &quot;
+					+ &quot;createRootApplicationContext() did not &quot;
+					+ &quot;return an application context&quot;);
+		}
+	}
+}
+</code></pre></li>
+</ol>
+
+<p>可以先关注此类先实现了WebApplicationInitializer,那么实现了该接口又如何呢?</p>
+
+<ol>
+<li><p>下面继续关注Spring的spring-web模块源码</p>
+
+<pre><code class="language-java">@HandlesTypes(WebApplicationInitializer.class)
+public class SpringServletContainerInitializer implements ServletContainerInitializer {
+@Override
+	public void onStartup(Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, ServletContext servletContext)
+			throws ServletException {
+    
+		List&lt;WebApplicationInitializer&gt; initializers = new LinkedList&lt;WebApplicationInitializer&gt;();
+    
+		if (webAppInitializerClasses != null) {
+			for (Class&lt;?&gt; waiClass : webAppInitializerClasses) {
+				// Be defensive: Some servlet containers provide us with invalid classes,
+				// no matter what @HandlesTypes says...
+				if (!waiClass.isInterface() &amp;&amp; !Modifier.isAbstract(waiClass.getModifiers()) &amp;&amp;
+						WebApplicationInitializer.class.isAssignableFrom(waiClass)) {
+					try {
+						initializers.add((WebApplicationInitializer) waiClass.newInstance());
+					}
+					catch (Throwable ex) {
+						throw new ServletException(&quot;Failed to instantiate WebApplicationInitializer class&quot;, ex);
+					}
+				}
+			}
+		}
+    
+		if (initializers.isEmpty()) {
+			servletContext.log(&quot;No Spring WebApplicationInitializer types detected on classpath&quot;);
+			return;
+		}
+    
+		servletContext.log(initializers.size() + &quot; Spring WebApplicationInitializers detected on classpath&quot;);
+		AnnotationAwareOrderComparator.sort(initializers);
+		for (WebApplicationInitializer initializer : initializers) {
+			initializer.onStartup(servletContext);
+		}
+	}
+    
+}
+</code></pre></li>
+
+<li><p>继续关注3中注解部分@HandlesTypes(WebApplicationInitializer.class),其主要就是在启动容器时负责加载相关配置:</p>
+
+<pre><code class="language-java">public interface ServletContainerInitializer {
+public void onStartup(Set&lt;Class&lt;?&gt;&gt; c, ServletContext ctx)
+        throws ServletException; 
+}
+</code></pre></li>
+</ol>
+
+<p>容器启动时会自动扫描当前服务中ServletContainerInitializer的实现类,并调用其OnStartup方法,其参数Set<Class<?>&gt; c可通过在实现类上生命注解javax.servlet.annotation.HandlesTypes(WebApplicationInitializer.class)注解自动注入,@HandlesTypes会自动扫描项目中所有的WebApplicationinitializer.class的实现类,并将其全部注入Set.</p>
+
+<ol>
+<li><p>通过4中的说明可以很清楚的理解其服务启动容器加载过程配置的装在过程,在SpringServletContainerInitializer中可以发现所有WebApplicationInitializer实现类在执行onStartup方法前需要根据器注解@Order值排序,下面自定义一个WebApplicationInitializer实现类:</p>
+
+<pre><code class="language-java">package org.ylf.springboot.config;  
+  
+import javax.servlet.ServletContext;  
+import javax.servlet.ServletException;  
+import org.slf4j.Logger;  
+import org.slf4j.LoggerFactory;  
+import org.springframework.core.annotation.Order;  
+import org.springframework.web.WebApplicationInitializer;  
+import org.ylf.springboot.runner.MyStartupRunner1;  
+@Order(1)  
+public class MyWebApplicationInitializer implements WebApplicationInitializer {  
+private Logger logger=LoggerFactory.getLogger(MyStartupRunner1.class);   
+      
+@Override  
+public void onStartup(ServletContext paramServletContext) throws ServletException {  
+    logger.info(&quot;启动加载自定义的MyWebApplicationInitializer&quot;);  
+    System.out.println(&quot;启动加载自定义的MyWebApplicationInitializer&quot;);  
+}  
+  
+}  
+</code></pre></li>
+</ol>
+
+<p>注：之前有专门讲解如何装载servlet、filter、listener的注解，且可以通过两种不同的方式。那么第三种方式可以通过WebApplicationInitializer的实现类来进行装载配置。但此方式仅限部署至常规容器下生效，采用jar方式应用内置容器启动服务不加载。</p>
+
+<p>6、既然可以通过自定义的WebApplicationInitializer来实现常规容器启动加载，那么我们是否可以直接自定义ServletContainerInitializer来实现启动加载配置呢：
+6.1、首先编写一个待注册的servlet：</p>
+
+<pre><code class="language-java">package org.ylf.springboot.servlet;  
+  
+import java.io.IOException;  
+import javax.servlet.ServletContext;  
+import javax.servlet.ServletException;  
+import javax.servlet.annotation.WebServlet;  
+import javax.servlet.http.HttpServlet;  
+import javax.servlet.http.HttpServletRequest;  
+import javax.servlet.http.HttpServletResponse;  
+import org.springframework.boot.web.servlet.ServletContextInitializer;  
+  
+public class Servlet4 extends HttpServlet   {  
+    private static final long serialVersionUID = -4186518845701003231L;  
+  
+    @Override  
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {  
+        System.out.println(&quot;Servlet4&quot;);  
+        resp.setContentType(&quot;text/html&quot;);    
+        resp.getWriter().write(&quot;Servlet4&quot;);  
+    }  
+      
+    @Override  
+    public void init() throws ServletException {  
+        super.init();  
+        System.out.println(&quot;Servlet4 loadOnStart&quot;);  
+    }  
+  
+}  
+</code></pre>
+
+<p>6.2、编写实现ServletContainerInitializer的自定义实现类：</p>
+
+<pre><code class="language-java">package org.ylf.springboot.config;  
+  
+import java.util.Set;  
+import javax.servlet.ServletContainerInitializer;  
+import javax.servlet.ServletContext;  
+import javax.servlet.ServletException;  
+import javax.servlet.ServletRegistration;  
+import org.slf4j.Logger;  
+import org.slf4j.LoggerFactory;  
+  
+public class MyServletContainerInitializer implements ServletContainerInitializer {  
+    private Logger logger=LoggerFactory.getLogger(MyServletContainerInitializer.class);   
+      
+    @Override  
+    public void onStartup(Set&lt;Class&lt;?&gt;&gt; set, ServletContext servletContext) throws ServletException {  
+        logger.info(&quot;启动加载自定义的MyServletContainerInitializer&quot;);  
+        System.out.println(&quot;启动加载自定义的MyServletContainerInitializer&quot;);  
+        ServletRegistration.Dynamic testServlet=servletContext.addServlet(&quot;servlet4&quot;,&quot;org.ylf.springboot.servlet.Servlet4&quot;);  
+        testServlet.setLoadOnStartup(1);  
+        testServlet.addMapping(&quot;/servlet4&quot;);  
+    }  
+}  
+</code></pre>
+
+<p>6.3、对新增的servlet设置其请求路径，同时打成WAR包部署至tomcat启动服务，但请求<a href="http://localhost:8080/SpringBoot1/servlet4却失败，此时发现需要了解servlet3对于ServletContainerInitializer">http://localhost:8080/SpringBoot1/servlet4却失败，此时发现需要了解servlet3对于ServletContainerInitializer</a>
+ 的加载机制是如何的，在官方有类似这样的描述“该接口的实现必须声明一个JAR资源放到程序中的META-INF/services下，并且记有该接口实现类的全路径，才会被运行时(server)的查找机制或是其它特定机制找到”。那么我们先参考spring-web-4.3.2.RELEASE.jar中</p>
+
+<p>我们可以将自定义的类配置到一个jar包下部署至WEB-INF\lib目录下，
+6.3.1、首先新建如下目录结构的文件并填写内容如下：</p>
+
+<p>6.3.2、然后通过如下命令生成jar包</p>
+
+<p>6.3.3、将myTest.jar放置WEB-INF\lib目录下重启服务，再次请求：</p>
+
+<p>注：与5中实现WebApplicationInitializer一样，该方式仅限于部署常规容器生效。故jar通过内置容器启动的服务无法加载servlet4配置。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/restful-api-design/" data-toggle="tooltip" data-placement="top" title="设计实用RESTful API的最佳实践">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/service-mesh-and-cookpad/" data-toggle="tooltip" data-placement="top" title="服务网格和Cookpad">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jul 25, 2016</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

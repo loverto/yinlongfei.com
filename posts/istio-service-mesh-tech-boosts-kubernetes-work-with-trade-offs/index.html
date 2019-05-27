@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 衡取 Istio 服务网格基于 Kubernetes 工作的优缺点 - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="衡取 Istio 服务网格基于 Kubernetes 工作的优缺点" />
+  <meta name="twitter:title" content="衡取 Istio 服务网格基于 Kubernetes 工作的优缺点" />
+  <meta name="description" content="原文链接：https://searchitoperations.techtarget.com/tip/Istio-service-mesh-tech-boosts-Kubernetes-work-with-trade-offs
+作者：[Alan R. Earls
+译者：殷龙飞
+ 为什么 IT 团队不可以使用一种工具，使开发人员能够专注于编写应用程序代码，使管理员可以以专注于 IT 资源的操作？尽管如此，Istio 确实需要研究利弊。 Kubernetes 是一个开源容器编排系统，它提供了管理和扩展容器化应用程序的强大功能，但有些事情它不能很好地完成。而 Istio 增加了额外的支持，它可以管理微服务之间的流量。
+Istio 服务网格项目是平台无关的，协作和开源的，由 IBM，Google 和 Lyft（基于应用程序的传输服务）开发。它使用代理 sider car 模型在云平台上连接，保护，管理和监控微服务网络。Istio 明确定义了基础架构的作用，与运行在其上的软件分离。
+Istio 整合的利弊 编排工具 Kubernetes 与 Istio 的整合，可以让开发人员和 IT 管理员在应用程序容器化这一共同目标上一起努力，IT 管理软件提供商 SolarWinds 的首席软件架构师 Karlo Zatylny 表示: “软件开发人员&hellip;&hellip;将注意力集中在编写能够创造最大商业价值的代码上”。他们不需要考虑部署因素，例如支持容器的 VM 和物理环境。
+Zatylny 说：通过 Istio，IT 管理员可以专注于计算资源和网络资源，而不是处理特定的硬件和虚拟分配。部署的基于微服务的应用程序在消耗可用资源方面变得更有效率，而不是在过度使用未充分利用基础架构的某些部分。Istio 还使用配置驱动的通信架构，这提高了开发周期的速度，因此开发人员可以在业务需求变化时轻松地进行软件重新设计。
+尽管代码重用和其他设计选择使复杂性最小化，但 Istio 服务网格设计带来了复杂性和额外的管理开销。
+Istio 在上行和下游提供负载平衡，授权，可见性和运行状况检查，使管理员能够查找，连接和路由各个部署部分。IDC 分析师 Brad Casemore 表示，它将网络应用于开放系统互连模型第7层的微服务交付环境，而不是IP的第3层或第2层的以太网。
+Red Hat 产品管理高级主管 Rich Sharples 说，在 Istio 服务网格中控制和数据平面之间的分割概念可能会使用户感到困惑，但实际上相当简单。数据平面使用简单的代理体系结构来调解服务网格中每个服务的所有入站和出站流量。控制平面处理服务注册和发现，认证，访问控制，证书管理（即签名，发布和撤销）和服务网格配置，以及来自服务和服务代理的遥测数据。
+服务网络可在 API 后面实现安全，可靠的服务器到服务器通信。“当你构建微服务时，你通常会公开一个 API，它会公开功能，然后通过一系列服务来实现”， Gartner 分析师 Anne Thomas 表示。因为容器是短暂的，这意味着它们不会保留会话信息，管理员必须定期重新连接它们，并且它们需要安全授权功能，以确保部署的服务器到服务器通信受到保护和运行。">
+  <meta property="og:description" content="原文链接：https://searchitoperations.techtarget.com/tip/Istio-service-mesh-tech-boosts-Kubernetes-work-with-trade-offs
+作者：[Alan R. Earls
+译者：殷龙飞
+ 为什么 IT 团队不可以使用一种工具，使开发人员能够专注于编写应用程序代码，使管理员可以以专注于 IT 资源的操作？尽管如此，Istio 确实需要研究利弊。 Kubernetes 是一个开源容器编排系统，它提供了管理和扩展容器化应用程序的强大功能，但有些事情它不能很好地完成。而 Istio 增加了额外的支持，它可以管理微服务之间的流量。
+Istio 服务网格项目是平台无关的，协作和开源的，由 IBM，Google 和 Lyft（基于应用程序的传输服务）开发。它使用代理 sider car 模型在云平台上连接，保护，管理和监控微服务网络。Istio 明确定义了基础架构的作用，与运行在其上的软件分离。
+Istio 整合的利弊 编排工具 Kubernetes 与 Istio 的整合，可以让开发人员和 IT 管理员在应用程序容器化这一共同目标上一起努力，IT 管理软件提供商 SolarWinds 的首席软件架构师 Karlo Zatylny 表示: “软件开发人员&hellip;&hellip;将注意力集中在编写能够创造最大商业价值的代码上”。他们不需要考虑部署因素，例如支持容器的 VM 和物理环境。
+Zatylny 说：通过 Istio，IT 管理员可以专注于计算资源和网络资源，而不是处理特定的硬件和虚拟分配。部署的基于微服务的应用程序在消耗可用资源方面变得更有效率，而不是在过度使用未充分利用基础架构的某些部分。Istio 还使用配置驱动的通信架构，这提高了开发周期的速度，因此开发人员可以在业务需求变化时轻松地进行软件重新设计。
+尽管代码重用和其他设计选择使复杂性最小化，但 Istio 服务网格设计带来了复杂性和额外的管理开销。
+Istio 在上行和下游提供负载平衡，授权，可见性和运行状况检查，使管理员能够查找，连接和路由各个部署部分。IDC 分析师 Brad Casemore 表示，它将网络应用于开放系统互连模型第7层的微服务交付环境，而不是IP的第3层或第2层的以太网。
+Red Hat 产品管理高级主管 Rich Sharples 说，在 Istio 服务网格中控制和数据平面之间的分割概念可能会使用户感到困惑，但实际上相当简单。数据平面使用简单的代理体系结构来调解服务网格中每个服务的所有入站和出站流量。控制平面处理服务注册和发现，认证，访问控制，证书管理（即签名，发布和撤销）和服务网格配置，以及来自服务和服务代理的遥测数据。
+服务网络可在 API 后面实现安全，可靠的服务器到服务器通信。“当你构建微服务时，你通常会公开一个 API，它会公开功能，然后通过一系列服务来实现”， Gartner 分析师 Anne Thomas 表示。因为容器是短暂的，这意味着它们不会保留会话信息，管理员必须定期重新连接它们，并且它们需要安全授权功能，以确保部署的服务器到服务器通信受到保护和运行。">
+  <meta name="twitter:description" content="原文链接：https://searchitoperations.techtarget.com/tip/Istio-service-mesh-tech-boosts-Kubernetes-work-with-trade-offs
+作者：[Alan R. Earls
+译者：殷龙飞
+ 为什么 IT 团队不可以使用一种工具，使开发人员能够专注于编写应用程序代码，使管理员可以以专注于 IT 资源的操作？尽管 …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/istio-service-mesh-tech-boosts-kubernetes-work-with-trade-offs/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/istio-service-mesh-tech-boosts-kubernetes-work-with-trade-offs/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">衡取 Istio 服务网格基于 Kubernetes 工作的优缺点</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Thu Aug 2, 2018</h4>
+    </section>
+    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                
+
+<blockquote>
+<p>原文链接：<a href="https://searchitoperations.techtarget.com/tip/Istio-service-mesh-tech-boosts-Kubernetes-work-with-trade-offs">https://searchitoperations.techtarget.com/tip/Istio-service-mesh-tech-boosts-Kubernetes-work-with-trade-offs</a></p>
+
+<p>作者：[<a href="https://www.techtarget.com/contributor/Alan-R-Earls">Alan R. Earls</a></p>
+
+<p>译者：殷龙飞</p>
+</blockquote>
+
+<h2 id="为什么-it-团队不可以使用一种工具-使开发人员能够专注于编写应用程序代码-使管理员可以以专注于-it-资源的操作-尽管如此-istio-确实需要研究利弊">为什么 IT 团队不可以使用一种工具，使开发人员能够专注于编写应用程序代码，使管理员可以以专注于 IT 资源的操作？尽管如此，Istio 确实需要研究利弊。</h2>
+
+<p>Kubernetes 是一个开源容器编排系统，它提供了管理和扩展容器化应用程序的强大功能，但有些事情它不能很好地完成。而 Istio 增加了额外的支持，它可以管理微服务之间的流量。</p>
+
+<p>Istio 服务网格项目是平台无关的，协作和开源的，由 IBM，Google 和 Lyft（基于应用程序的传输服务）开发。<a href="https://searchmicroservices.techtarget.com/news/450419875/IBM-Google-Lyft-launch-Istio-open-source-microservices-platform">它使用代理 sider car 模型</a>在云平台上连接，保护，管理和监控微服务网络。Istio 明确<a href="https://searchitoperations.techtarget.com/feature/Service-mesh-architecture-radicalizes-container-networking">定义了基础架构的作用</a>，与运行在其上的软件分离。</p>
+
+<h3 id="istio-整合的利弊">Istio 整合的利弊</h3>
+
+<p>编排工具 <a href="https://searchitoperations.techtarget.com/definition/Google-Kubernetes">Kubernetes</a> 与 Istio 的整合，可以让开发人员和 IT 管理员在应用程序容器化这一共同目标上一起努力，IT 管理软件提供商 SolarWinds 的首席软件架构师 Karlo Zatylny 表示: “软件开发人员&hellip;&hellip;将注意力集中在编写能够创造最大商业价值的代码上”。他们不需要考虑<a href="https://searchitoperations.techtarget.com/ehandbook/How-container-deployment-changes-the-capacity-management-equation">部署因素</a>，例如支持容器的 VM 和物理环境。</p>
+
+<p>Zatylny 说：通过 Istio，IT 管理员可以专注于计算资源和网络资源，而不是处理特定的硬件和虚拟分配。部署的基于微服务的应用程序在消耗可用资源方面变得更有效率，而不是在过度使用未充分利用基础架构的某些部分。Istio 还使用配置驱动的通信架构，这提高了开发周期的速度，因此开发人员可以在业务需求变化时轻松地进行软件重新设计。</p>
+
+<p>尽管代码重用和其他设计选择使复杂性最小化，但 Istio 服务网格设计带来了复杂性和额外的管理开销。</p>
+
+<p>Istio 在上行和下游提供负载平衡，授权，可见性和运行状况检查，使管理员能够查找，连接和路由各个部署部分。IDC 分析师 Brad Casemore 表示，它将网络应用于<a href="https://searchnetworking.techtarget.com/definition/OSI">开放系统互连模型</a>第7层的微服务交付环境，而不是IP的第3层或第2层的以太网。</p>
+
+<p>Red Hat 产品管理高级主管 Rich Sharples 说，在 Istio 服务网格中控制和数据平面之间的分割概念可能会使用户感到困惑，但实际上相当简单。数据平面使用简单的代理体系结构来调解服务网格中每个服务的所有入站和出站流量。控制平面处理服务注册和发现，认证，访问控制，证书管理（即签名，发布和撤销）和服务网格配置，以及来自服务和服务代理的遥测数据。</p>
+
+<p>服务网络可在 <a href="https://searchmicroservices.techtarget.com/definition/application-program-interface-API">API</a> 后面实现安全，可靠的服务器到服务器通信。“当你构建微服务时，你通常会公开一个 API，它会公开功能，然后通过一系列服务来实现”， Gartner 分析师 Anne Thomas 表示。因为容器是短暂的，这意味着它们不会保留会话信息，管理员必须定期重新连接它们，并且它们需要安全授权功能，以确保部署的服务器到服务器通信受到保护和运行。</p>
+
+<p>Istio 的服务网格定位服务，确保通信弹性，并在连接失败时执行重试或找到必要服务的另一个实例并建立连接。托马斯说：服务网格还可以实现隔板和断路器。隔板隔离应用程序的各个部分，以确保任何给定的服务故障不会影响任何其他服务。断路器是一种监控组件，具有用于<a href="https://medium.com/microservices-in-practice/microservices-in-practice-7a3e85b6624c">外部微服务通信</a>的编程故障阈值; 断路器杀死故障服务以调节资源消耗并请求响应时间。</p>
+
+<p><a href="https://searchsdn.techtarget.com/definition/east-west-traffic">东西方通信能力</a>是微服务的另一个关键需求。将客户端连接到服务的API网关是南北通信; 这通常是足够的，但是为了实现其背后具有附加服务的微服务，服务网络创建东西向通信，即IT环境内的通信。Istio是为这种沟通途径而构建的。</p>
+
+<p>Istio 有一些缺点，因为它提供了一个标准的多语言运行时服务网格，可以在给定的云平台上运行，但一如既往，需要权衡利弊。虽然 Istio 使开发人员能够在不模糊应用逻辑的情况下生成智能微服务设计模式和最佳实践，但该功能具有性能和延迟影响，Sharples 说。Sharples 表示，Istio 的代理 sidecar 模型 - 用于调解流量的开源 Envoy边缘代理 - 引入了额外的网络调用，可能会为高性能实时应用产生<a href="https://searchmicroservices.techtarget.com/tip/Microservices-challenges-include-latency-but-it-can-be-beat">不可接受的延迟</a>。</p>
+
+<h3 id="如何采用-istio-服务网格">如何采用 Istio 服务网格</h3>
+
+<p>Istio 在测试版中，在发布时没有提供商业支持。Casemore 说，对于大多数组织来说，它是一个有用的概念验证项目，但只有当它们具有冒险精神并且可能不适用于关键业务应用程序时。</p>
+
+<p>IDC 的分析师 Gary Chen 说：“这是为那些生活在最前沿，也许是一些团队探索这项技术的人，但是他们必须非常自信”。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/spring5-technology-insider-one-part/" data-toggle="tooltip" data-placement="top" title="Spring 5 源码分析之Spring技术内幕的读书笔记">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/envoy-service-mesh-cascading-failure/" data-toggle="tooltip" data-placement="top" title="使用 Kubernetes 和 Istio 进行基于容器的全面服务监控">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Thu Aug 2, 2018</h4>
+    </section>
+    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

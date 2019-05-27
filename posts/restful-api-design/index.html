@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 设计实用RESTful API的最佳实践 - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="设计实用RESTful API的最佳实践" />
+  <meta name="twitter:title" content="设计实用RESTful API的最佳实践" />
+  <meta name="description" content="[设计实用RESTful API的最佳实践] 您的数据模型已开始稳定，您可以为您的网络应用创建公共API。您意识到，一旦API发布并且希望尽可能正确地获得API，很难对其进行重大更改。现在，互联网上对API设计的看法并不缺乏。但是，由于没有一个广泛采用的标准适用于所有情况，因此您有许多选择：您应该接受哪些格式？ 你应该如何认证？ 你的API应该被版本化吗？
+在为 Enchant （ Zendesk Alternative ） 设计API时 ，我试图为这些问题提出实用的答案。我的目标是为Enchant设计的API 是易于使用，易于采用，并具有足够的灵活性，以内部测试 为我们自己的用户界面。
+目录  API是开发人员的用户界面 - 所以要付出一些努力让它变得愉快 使用RESTful URL和操作 在任何地方使用SSL，没有例外 API只有它的文档一样好 - 所以有很好的文档 版本通过URL，而不是通过标题 使用查询参数进行高级筛选，排序和搜索 提供一种方法来限制从API返回的字段 从POST，PATCH和PUT请求中返回一些有用的东西 HATEOAS还不实用 尽可能使用JSON，只有在必要时才使用XML 你应该使用带有JSON的camelCase，但是snake_case更容易阅读20％ 默认打印漂亮并确保支持gzip 默认情况下不要使用响应封装 考虑将JSON用于POST，PUT和PATCH请求主体 使用链接标头进行分页 提供自动加载相关资源表示的方法 提供一种覆盖HTTP方法的方法 为速率限制提供有用的响应标头 使用基于令牌的身份验证，通过需要委派的OAuth2进行传输 包括便于缓存的响应标头 定义消耗品错误有效负载 有效使用HTTP状态代码  API的关键要求 网上发现的许多API设计观点都是围绕模糊标准的主观解释而不是在现实世界中有意义的学术讨论。我在这篇文章中的目标是描述为当今的Web应用程序设计的实用API的最佳实践。如果感觉不对，我不会尝试满足标准。为了帮助指导决策制定过程，我已经写下了API必须要求的一些要求：
+ 它应该使用有意义的 Web标准 它应该对开发人员友好，并可通过浏览器地址栏进行探索 它应该简单，直观和一致，以使采用不仅容易而且令人愉快 它应该提供足够的灵活性来为大多数 enchant UI 提供动力 它应该是有效的，同时保持与其他要求的平衡  API是开发人员的UI - 就像任何UI一样，确保仔细考虑用户体验非常重要！
+使用RESTful URL和操作 如果有一件事被广泛采用，那就是RESTful原则。这些是 Roy Fielding 在他关于基于网络的软件架构的论文的第5章中首次介绍的。
+REST 的关键原则涉及将API分离为逻辑资源。使用HTTP请求操纵这些资源，其中方法（GET，POST，PUT，PATCH，DELETE）具有特定含义。">
+  <meta property="og:description" content="[设计实用RESTful API的最佳实践] 您的数据模型已开始稳定，您可以为您的网络应用创建公共API。您意识到，一旦API发布并且希望尽可能正确地获得API，很难对其进行重大更改。现在，互联网上对API设计的看法并不缺乏。但是，由于没有一个广泛采用的标准适用于所有情况，因此您有许多选择：您应该接受哪些格式？ 你应该如何认证？ 你的API应该被版本化吗？
+在为 Enchant （ Zendesk Alternative ） 设计API时 ，我试图为这些问题提出实用的答案。我的目标是为Enchant设计的API 是易于使用，易于采用，并具有足够的灵活性，以内部测试 为我们自己的用户界面。
+目录  API是开发人员的用户界面 - 所以要付出一些努力让它变得愉快 使用RESTful URL和操作 在任何地方使用SSL，没有例外 API只有它的文档一样好 - 所以有很好的文档 版本通过URL，而不是通过标题 使用查询参数进行高级筛选，排序和搜索 提供一种方法来限制从API返回的字段 从POST，PATCH和PUT请求中返回一些有用的东西 HATEOAS还不实用 尽可能使用JSON，只有在必要时才使用XML 你应该使用带有JSON的camelCase，但是snake_case更容易阅读20％ 默认打印漂亮并确保支持gzip 默认情况下不要使用响应封装 考虑将JSON用于POST，PUT和PATCH请求主体 使用链接标头进行分页 提供自动加载相关资源表示的方法 提供一种覆盖HTTP方法的方法 为速率限制提供有用的响应标头 使用基于令牌的身份验证，通过需要委派的OAuth2进行传输 包括便于缓存的响应标头 定义消耗品错误有效负载 有效使用HTTP状态代码  API的关键要求 网上发现的许多API设计观点都是围绕模糊标准的主观解释而不是在现实世界中有意义的学术讨论。我在这篇文章中的目标是描述为当今的Web应用程序设计的实用API的最佳实践。如果感觉不对，我不会尝试满足标准。为了帮助指导决策制定过程，我已经写下了API必须要求的一些要求：
+ 它应该使用有意义的 Web标准 它应该对开发人员友好，并可通过浏览器地址栏进行探索 它应该简单，直观和一致，以使采用不仅容易而且令人愉快 它应该提供足够的灵活性来为大多数 enchant UI 提供动力 它应该是有效的，同时保持与其他要求的平衡  API是开发人员的UI - 就像任何UI一样，确保仔细考虑用户体验非常重要！
+使用RESTful URL和操作 如果有一件事被广泛采用，那就是RESTful原则。这些是 Roy Fielding 在他关于基于网络的软件架构的论文的第5章中首次介绍的。
+REST 的关键原则涉及将API分离为逻辑资源。使用HTTP请求操纵这些资源，其中方法（GET，POST，PUT，PATCH，DELETE）具有特定含义。">
+  <meta name="twitter:description" content="[设计实用RESTful API的最佳实践] 您的数据模型已开始稳定，您可以为您的网络应用创建公共API。您意识到，一旦API发布并且希望尽可能正确地获得API，很难对其进行重大更改。现在，互联网上对API设计的看法并不缺乏。但是，由于没有一个广泛采用的标准适用于所有情况，因此您有许多选择：您应该接受哪些格式？ 你应该如何认证？ 你的API应该被版本化吗？
+在为 Enchant （ Zendesk …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/restful-api-design/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/restful-api-design/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">设计实用RESTful API的最佳实践</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Thu Feb 25, 2016</h4>
+    </section>
+    <h5 id="wc">800 Words|Read in about 4 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#设计实用restful-api的最佳实践">[设计实用RESTful API的最佳实践]</a>
+<ul>
+<li><a href="#目录">目录</a></li>
+<li><a href="#requirements">API的关键要求</a></li>
+<li><a href="#使用restful-url和操作">使用RESTful URL和操作</a></li>
+<li><a href="#ssl无处不在-始终如一">SSL无处不在 - 始终如一</a></li>
+<li><a href="#文档">文档</a></li>
+<li><a href="#版本">版本</a></li>
+<li><a href="#结果过滤-排序和搜索">结果过滤，排序和搜索</a></li>
+<li><a href="#限制api返回哪些字段">限制API返回哪些字段</a></li>
+<li><a href="#更新和创建应返回资源表示">更新和创建应返回资源表示</a></li>
+<li><a href="#你应该hateoas吗">你应该HATEOAS吗？</a></li>
+<li><a href="#只响应json">只响应JSON</a></li>
+<li><a href="#snake-case-vs-camelcase用于字段名称">snake_case vs camelCase用于字段名称</a></li>
+<li><a href="#默认打印漂亮并确保支持gzip">默认打印漂亮并确保支持gzip</a></li>
+<li><a href="#默认情况下不要使用封装-但在需要时可以使用">默认情况下不要使用封装，但在需要时可以使用</a></li>
+<li><a href="#json编码post-put和patch主体">JSON编码POST，PUT和PATCH主体</a></li>
+<li><a href="#分页">分页</a></li>
+<li><a href="#自动加载相关的资源表示">自动加载相关的资源表示</a></li>
+<li><a href="#覆盖http方法">覆盖HTTP方法</a></li>
+<li><a href="#限速">限速</a></li>
+<li><a href="#认证">认证</a></li>
+<li><a href="#高速缓存">高速缓存</a></li>
+<li><a href="#错误">错误</a></li>
+<li><a href="#http状态代码">HTTP状态代码</a></li>
+<li><a href="#综上所述">综上所述</a></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+  
+
+
+                
+
+<h1 id="设计实用restful-api的最佳实践">[设计实用RESTful API的最佳实践]</h1>
+
+<p>您的数据模型已开始稳定，您可以为您的网络应用创建公共API。您意识到，一旦API发布并且希望尽可能正确地获得API，很难对其进行重大更改。现在，互联网上对API设计的看法并不缺乏。但是，由于没有一个广泛采用的标准适用于所有情况，因此您有许多选择：您应该接受哪些格式？ 你应该如何认证？ 你的API应该被版本化吗？</p>
+
+<p>在为 <a href="http://www.enchant.com">Enchant</a> （ <a href="http://www.enchant.com/zendesk-alternative">Zendesk Alternative</a> ） 设计API时 ，我试图为这些问题提出实用的答案。我的目标是为Enchant设计的<a href="http://dev.enchant.com/api/v1">API</a> 是易于使用，易于采用，并具有足够的灵活性，以<a href="http://en.wikipedia.org/wiki/Eating_your_own_dog_food">内部测试</a> 为我们自己的用户界面。</p>
+
+<h2 id="目录">目录</h2>
+
+<ul>
+<li><a href="#requirements">API是开发人员的用户界面 - 所以要付出一些努力让它变得愉快</a></li>
+<li><a href="#restful">使用RESTful URL和操作</a></li>
+<li><a href="#ssl">在任何地方使用SSL，没有例外</a></li>
+<li><a href="#docs">API只有它的文档一样好 - 所以有很好的文档</a></li>
+<li><a href="#versioning">版本通过URL，而不是通过标题</a></li>
+<li><a href="#advanced-queries">使用查询参数进行高级筛选，排序和搜索</a></li>
+<li><a href="#limiting-fields">提供一种方法来限制从API返回的字段</a></li>
+<li><a href="#useful-post-responses">从POST，PATCH和PUT请求中返回一些有用的东西</a></li>
+<li><a href="#hateoas">HATEOAS还不实用</a></li>
+<li><a href="#json-responses">尽可能使用JSON，只有在必要时才使用XML</a></li>
+<li><a href="#snake-vs-camel">你应该使用带有JSON的camelCase，但是snake_case更容易阅读20％</a></li>
+<li><a href="#pretty-print-gzip">默认打印漂亮并确保支持gzip</a></li>
+<li><a href="#envelope">默认情况下不要使用响应封装</a></li>
+<li><a href="#json-requests">考虑将JSON用于POST，PUT和PATCH请求主体</a></li>
+<li><a href="#pagination">使用链接标头进行分页</a></li>
+<li><a href="#autoloading">提供自动加载相关资源表示的方法</a></li>
+<li><a href="#method-override">提供一种覆盖HTTP方法的方法</a></li>
+<li><a href="#rate-limiting">为速率限制提供有用的响应标头</a></li>
+<li><a href="#authentication">使用基于令牌的身份验证，通过需要委派的OAuth2进行传输</a></li>
+<li><a href="#caching">包括便于缓存的响应标头</a></li>
+<li><a href="#errors">定义消耗品错误有效负载</a></li>
+<li><a href="#http-status">有效使用HTTP状态代码</a></li>
+</ul>
+
+<h2 id="requirements">API的关键要求</h2>
+
+<p>网上发现的许多API设计观点都是围绕模糊标准的主观解释而不是在现实世界中有意义的学术讨论。我在这篇文章中的目标是描述为当今的Web应用程序设计的实用API的最佳实践。如果感觉不对，我不会尝试满足标准。为了帮助指导决策制定过程，我已经写下了API必须要求的一些要求：</p>
+
+<ul>
+<li>它应该使用<em>有意义的</em> Web标准</li>
+<li>它应该对开发人员友好，并可通过浏览器地址栏进行探索</li>
+<li>它应该简单，直观和一致，以使采用不仅容易而且令人愉快</li>
+<li>它应该提供足够的灵活性来为大多数 <a href="http://www.enchant.com">enchant</a> UI 提供动力</li>
+<li>它应该是有效的，同时保持与其他要求的平衡</li>
+</ul>
+
+<p>API是开发人员的UI - 就像任何UI一样，确保仔细考虑用户体验非常重要！</p>
+
+<h2 id="使用restful-url和操作">使用RESTful URL和操作</h2>
+
+<p>如果有一件事被广泛采用，那就是RESTful原则。这些是 <a href="http://roy.gbiv.com/">Roy Fielding</a> 在他关于基于<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">网络的软件架构的</a>论文的<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">第5章</a>中首次介绍的。</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> 的关键原则涉及将API分离为逻辑资源。使用HTTP请求操纵这些资源，其中方法（GET，POST，PUT，PATCH，DELETE）具有特定含义。</p>
+
+<p><strong>但是我可以创造什么资源呢？</strong>嗯，这些应该是从API消费者的角度来看有意义的<a href="https://blog.apigee.com/detail/restful_api_design_nouns_are_good_verbs_are_bad">名词（不是动词！）</a>。虽然您的内部模型可能整齐地映射到资源，但它不一定是一对一映射。这里的关键是不要将不相关的实现细节泄露给您的API！一些enchant的名词将是*门票*，*用户*和*团体*。</p>
+
+<p>定义资源后，您需要确定哪些操作适用于它们以及这些操作将如何映射到您的API。RESTful原则提供了使用HTTP方法处理 <a href="http://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> 操作的策略，映射如下：</p>
+
+<ul>
+<li>GET /ticket - 检索故障单列表</li>
+<li>GET /tickets/12 - 检索特定故障单</li>
+<li>POST /tickets - 创建新票证</li>
+<li>PUT /tickets/12 - 更新门票＃12</li>
+<li>PATCH /tickets/12 - 部分更新机票＃12</li>
+<li>DELETE /tickets/12 - 删除12号门票</li>
+</ul>
+
+<p>REST的优点在于您利用现有的HTTP方法在单个/ticket 端点上实现重要功能。没有方法命名约定，URL结构清晰明了。<em>REST FTW！</em></p>
+
+<p><strong>端点名称应该是单数还是复数？</strong> 保持简单的规则适用于此处。尽管您的内部语法学家会告诉您使用复数描述资源的单个实例是错误的，但实用的答案是保持URL格式一致并始终使用复数。不必处理奇怪的复数化（person/people，goose/geese）使API消费者的生活变得更好并且API提供者更容易实现（因为大多数现代框架本身将处理 /ticket 和 /ticket/12 下共同控制者）。</p>
+
+<p><strong>但是你如何处理关系？</strong> 如果关系只能存在于另一个资源中，则RESTful原则可提供有用的指导。我们来看一个例子吧。<a href="http://www.enchant.com">Enchant</a>中的票证包含许多消息。这些消息可以逻辑映射到 /ticket 端点，如下所示：</p>
+
+<ul>
+<li>GET /tickets/12/messages - 检索故障单＃12的消息列表</li>
+<li>GET /tickets/12/messages/5 - 检索＃12票据的消息＃5</li>
+<li>POST /tickets/12/messages - 在故障单＃12中创建一条新消息</li>
+<li>PUT /tickets/12/messages/5 - 更新机票＃12的消息＃5</li>
+<li>PATCH /tickets/12/messages/5 - 部分更新机票＃12的消息＃5</li>
+<li>DELETE /tickets/12/messages/5 - 删除＃12票据的消息＃5</li>
+</ul>
+
+<p>或者，如果关系可以独立于资源而存在，则仅在资源的输出表示中包含其标识符是有意义的。然后，API使用者必须达到关系的端点。但是，如果通常与资源一起请求关系，则API可以提供自动嵌入关系表示的功能，并避免对API的第二次命中。</p>
+
+<p><strong>那些不适合CRUD操作世界的行为呢？</strong></p>
+
+<p>这是事情变得模糊的地方。有很多方法：</p>
+
+<ol>
+<li>将操作重组为显示为资源字段。如果操作不采用参数，则此方法有效。例如，<em>激活</em> 动作可以映射到布尔激活的字段，并通过PATCH更新到资源。</li>
+<li>将其视为具有RESTful原则的子资源。例如，GitHub的API可以让你 <a href="http://developer.github.com/v3/gists/#star-a-gist">添加星号标记</a> 与 PUT /gists/:id/star 和 <a href="http://developer.github.com/v3/gists/#unstar-a-gist">取消星号标记</a> 与 DELETE /gists/:id/star。</li>
+<li>有时你真的无法将动作映射到合理的RESTful结构。例如，多资源搜索实际上没有意义应用于特定资源的端点。在这种情况下，即使它不是资源 ，/search 也会最有意义。这没关系 - 只需从API使用者的角度做正确的事情，并确保明确记录以避免混淆。</li>
+</ol>
+
+<h2 id="ssl无处不在-始终如一">SSL无处不在 - 始终如一</h2>
+
+<p>始终使用SSL。没有例外。今天，您的Web API可以从任何有互联网的地方访问（如图书馆，咖啡馆，机场等）。并非所有这些都是安全的。许多人根本不加密通信，如果身份验证凭据被劫持，则允许轻松窃听或模拟。</p>
+
+<p>始终使用SSL的另一个好处是保证加密通信简化了身份验证工作 - 您可以使用简单的访问令牌，而不必签署每个API请求。</p>
+
+<p>需要注意的一点是对API URL的非SSL访问。难道 <strong>不是</strong> 这些重定向到SSL同行。反而投掷一个硬错误！ 您想要的最后一件事是配置不当的客户端将请求发送到未加密的端点，只是为了静默地重定向到实际的加密端点。</p>
+
+<h2 id="文档">文档</h2>
+
+<p>API只能与其文档一样好。文档应该易于查找和公开访问。大多数开发人员会在尝试任何集成工作之前检查文档。当文档隐藏在PDF文件中或需要登录时，它们不仅难以找到而且不易搜索。</p>
+
+<p>文档应该显示完整的请求/响应周期的示例。优选地，请求应该是可接受的示例 - 可以粘贴到浏览器中的链接或可以粘贴到终端中的卷曲示例。<a href="http://developer.github.com/v3/gists/#list-gists">GitHub</a> 和 <a href="https://stripe.com/docs/api">Stripe</a> 做得很好。</p>
+
+<p>一旦您发布了公共API，您就承诺不会在不事先通知的情况下破坏它。文档必须包含任何弃用计划和有关外部可见API更新的详细信息。更新应通过博客（即更改日志）或邮件列表（最好是两者！）进行。</p>
+
+<h2 id="版本">版本</h2>
+
+<p>始终为您的API提供版本。版本控制可帮助您更快地进行迭代，并防止无效请求命中更新的端点。它还有助于平滑任何主要的API版本转换，因为您可以继续提供一段时间的旧API版本。</p>
+
+<p>关于 <a href="http://stackoverflow.com/questions/389169/best-practices-for-api-versioning">API版本是应该包含在URL还是标题中，</a> 有不一致的看法。从学术上讲，它可能应该在标题中。但是，版本需要在URL中以确保浏览器跨版本的资源可用性（请记住本文顶部指定的API要求？）。</p>
+
+<p>我非常喜欢 <a href="https://stripe.com/docs/api#versioning">Stripe对API版本化的方法</a> - URL具有主版本号（v1），但API具有基于日期的子版本，可以使用自定义HTTP请求头来选择。在这种情况下，主要版本提供API整体的结构稳定性，而子版本则考虑较小的更改（字段弃用，端点更改等）。</p>
+
+<p>API永远不会完全稳定。变化是不可避免的。重要的是如何管理这种变化。对于许多API而言，记录良好且公布的多月弃用计划可能是可接受的做法。这取决于行业和API的可能消费者的合理性。</p>
+
+<h2 id="结果过滤-排序和搜索">结果过滤，排序和搜索</h2>
+
+<p>最好保持基本资源URL尽可能精简。复杂的结果过滤器，排序要求和高级搜索（当限制为单一类型的资源时）都可以轻松实现为基本URL之上的查询参数。让我们更详细地看一下这些：</p>
+
+<p><strong>过滤</strong> ：对实现过滤的每个字段使用唯一查询参数。例如，从 /tickets 端点 请求票证列表时 ，您可能希望将这些仅限于处于打开状态 的票证列表。这可以通过 GET /ticket?state=open 等请求来完成。这里，state 是一个实现过滤器的查询参数。</p>
+
+<p><strong>排序</strong> ：与过滤类似，通用参数 排序 可用于描述排序规则。通过让sort参数包含逗号分隔字段列表来容纳复杂的排序要求，每个字段都有一个可能的一元否定以暗示降序排序。我们来看一些例子：</p>
+
+<ul>
+<li>GET <code>/ticket?sort=-priority</code> - 按优先级降序检索故障单列表</li>
+<li>GET <code>/tickets?sort=-priority,created_at</code> - 按优先级降序检索故障单列表。在特定优先级内，首先订购旧票</li>
+</ul>
+
+<p><strong>搜索</strong> ：有时基本的过滤器是不够的，你需要全文搜索的力量。也许您已经在使用 <a href="http://www.elasticsearch.org">ElasticSearch</a> 或其他基于 <a href="http://lucene.apache.org">Lucene</a> 的搜索技术。当全文搜索用作检索特定类型资源的资源实例的机制时，它可以作为资源端点上的查询参数在API上公开。我们说 q。搜索查询应直接传递给搜索引擎，API输出的格式应与普通列表结果相同。</p>
+
+<p>将这些组合在一起，我们可以构建如下查询：</p>
+
+<ul>
+<li>GET <code>/tickets?sort=-updated_at</code> - 检索最近更新的票证</li>
+<li>GET <code>/tickets?state=closed&amp;sort=-updated_at</code> - 检索最近关闭的票证</li>
+<li>GET <code>/tickets?q=return&amp;state=open&amp;sort=-priority,created_at</code> - 检索提到“return”一词的最高优先级开放票</li>
+</ul>
+
+<p><strong>常见查询的别名</strong></p>
+
+<p>为了使普通消费者的API体验更加愉快，可以考虑将一组条件打包成易于访问的RESTful路径。例如，上面最近关闭的票证查询可以打包为 GET <code>/tickets/recently_closed</code></p>
+
+<h2 id="限制api返回哪些字段">限制API返回哪些字段</h2>
+
+<p>API使用者并不总是需要资源的完整表示。选择和选择返回字段的能力在允许API使用者最小化网络流量并加速他们自己的API使用方面有很长的路要走。</p>
+
+<p>使用 字段 查询参数，该参数采用逗号分隔的字段列表来包含。例如，以下请求将检索足够的信息以显示打开的票证的已排序列表：</p>
+
+<p>GET <code>/tickets?fields=id,subject,customer_name,updated_at&amp;state=open&amp;sort=-updated_at</code></p>
+
+<h2 id="更新和创建应返回资源表示">更新和创建应返回资源表示</h2>
+
+<p>PUT，POST或PATCH调用可以对基础资源的字段进行修改，这些字段不是所提供参数的一部分（例如：created_at或updated_at timestamps）。为了防止API使用者必须再次访问API以获得更新的表示，请让API返回更新（或创建）的表示作为响应的一部分。</p>
+
+<p>如果POST导致创建，请使用 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5">HTTP 201状态代码</a> 并包含指向新资源的URL的 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30">Location标头</a>。</p>
+
+<h2 id="你应该hateoas吗">你应该HATEOAS吗？</h2>
+
+<p>关于API使用者是否应该创建链接或者是否应该向API提供链接，有很多不一致的意见。RESTful设计原则指定 <a href="https://blog.apigee.com/detail/hateoas_101_introduction_to_a_rest_api_style_video_slides">HATEOAS</a> ，它粗略地声明应该在输出表示附带的元数据中定义与端点的交互，而不是基于带外信息。</p>
+
+<p>虽然网络通常适用于HATEOAS类型的原则（我们进入网站的首页并根据我们在页面上看到的链接进行链接），但我认为我们还没准备好在API上使用HATEOAS。浏览网站时，会在运行时决定点击哪些链接。但是，使用API​​时，会在编写API集成代码时（而不是在运行时）决定将发送哪些请求。决定是否可以推迟到运行时间？ 当然，由于代码仍然无法在不中断的情况下处理重要的API更改，因此没有太多可以获得这条路线。也就是说，我认为HATEOAS很有希望但尚未准备好迎接黄金时段。必须付出更多努力来围绕这些原则定义标准和工具，以充分实现其潜力。</p>
+
+<p>目前，最好假设用户可以访问文档并在输出表示中包含资源标识符，API使用者在制作链接时将使用这些标识符。坚持使用标识符有一些优点 - 通过网络流动的数据被最小化，API使用者存储的数据也被最小化（因为它们存储小标识符而不是包含标识符的URL）。</p>
+
+<p>此外，鉴于此帖子提倡URL中的版本号，从长远来看，API消费者存储资源标识符而不是URL更有意义。毕竟，标识符在不同版本中是稳定的，但代表它的URL不是！</p>
+
+<h2 id="只响应json">只响应JSON</h2>
+
+<p>是时候将XML抛弃在API中了。它冗长，难以解析，难以阅读，其数据模型与大多数编程语言建模数据的方式不兼容，当您的输出表示的主要需求是从内部表示序列化时，其可扩展性优势无关紧要。</p>
+
+<p>我不会花费太多精力来解释上述情况，因为看起来其他人（ <a href="http://apiblog.youtube.com/2012/12/the-simpler-yet-more-powerful-new.html">YouTube</a> ，<a href="https://dev.twitter.com/docs/api/1.1/overview#JSON_support_only">Twitter</a> 和 <a href="http://developers.blog.box.com/2012/12/14/v2_api/">Box</a> ）已经开始放弃了XML。</p>
+
+<p>我将给您留下以下Google趋势图表（ <a href="http://www.google.com/trends/explore?q=xml+api#q=xml%20api%2C%20json%20api&amp;cmpt=q">XML API与JSON API</a> ）作为思考的食物：</p>
+
+<p><img src="https://www.vinaysahni.com/images/201305-xml-vs-json-api.png" alt="" /></p>
+
+<p>但是，如果您的客户群由大量企业客户组成，您可能会发现自己无论如何都必须支持XML。如果你必须这样做，你会发现自己有一个新问题：</p>
+
+<p><strong>媒体类型是否应根据Accept标头或基于URL进行更改？</strong> 为确保浏览器可利用性，它应该在URL中。这里最明智的选择是将 .json 或 .xml 扩展名 附加 到端点URL。</p>
+
+<h2 id="snake-case-vs-camelcase用于字段名称">snake_case vs camelCase用于字段名称</h2>
+
+<p>如果您使用JSON（ <em>JavaScript</em> Object Notation）作为主要表示格式，那么“正确”的做法是遵循JavaScript命名约定 - 这意味着camelCase用于字段名称！ 如果你再以各种语言构建客户端库的路线，最好在其中使用惯用的命名约定 - 用于C＃和Java的camelCase，用于python和ruby的snake_case。</p>
+
+<p>深思熟虑：我一直觉得 <a href="http://en.wikipedia.org/wiki/Snake_case">snake_case</a> 比JavaScript的 <a href="http://en.wikipedia.org/wiki/CamelCase">camelCase</a> 惯例更容易阅读。直到现在，我还没有任何证据来支持我的直觉。基于 2010年 <a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&amp;arnumber=5521745">对camelCase和snake_case</a> （ <a href="http://www.cs.kent.edu/~jmaletic/papers/ICPC2010-CamelCaseUnderScoreClouds.pdf">PDF</a> ） 的 <a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&amp;arnumber=5521745">眼动追踪研究</a> ，<strong>snake_case比camelCase更容易阅读20％</strong> ！ 这对可读性的影响会影响API可探索性和文档中的示例。</p>
+
+<p>许多流行的JSON API使用snake_case。我怀疑这是由于序列化库遵循他们使用的基础语言的命名约定。也许我们需要让JSON序列化库处理命名约定转换。</p>
+
+<h2 id="默认打印漂亮并确保支持gzip">默认打印漂亮并确保支持gzip</h2>
+
+<p>从浏览器中查看，提供空白空间压缩输出的API并不是很有趣。虽然可以提供某种查询参数（例如 <code>?pretty=true</code> ）来启用漂亮打印，但默认情况下相当打印的API更加平易近人。额外数据传输的成本可以忽略不计，特别是当您与不实现gzip的成本进行比较时。</p>
+
+<p>考虑一些用例：如果API使用者正在调试并且他们的代码打印出从API接收的数据该怎么办 - 默认情况下它是可读的。或者，如果消费者抓住他们的代码生成的URL并直接从浏览器点击它 - 默认情况下它是可读的。这些都是小事。使API变得愉快的小东西！</p>
+
+<p><strong>但是所有额外的数据传输呢？</strong></p>
+
+<p>让我们用一个真实世界的例子看看这个。我 <a href="https://api.github.com/users/veesahni">从GitHub的API中</a> 提取了一些 <a href="https://api.github.com/users/veesahni">数据</a> ，默认使用漂亮的打印。我还将进行一些gzip比较：</p>
+
+<pre><code class="language-bash">
+$ curl https://api.github.com/users/veesahni &gt; with-whitespace.txt
+$ ruby -r json -e 'puts JSON JSON.parse(STDIN.read)' &lt; with-whitespace.txt &gt; without-whitespace.txt
+$ gzip -c with-whitespace.txt &gt; with-whitespace.txt.gz
+$ gzip -c without-whitespace.txt &gt; without-whitespace.txt.gz
+
+</code></pre>
+
+<p>输出文件具有以下大小：</p>
+
+<ul>
+<li>without-whitespace.txt - 1252个字节</li>
+<li>with-whitespace.txt - 1369个字节</li>
+<li>without-whitespace.txt.gz - 496个字节</li>
+<li>with-whitespace.txt.gz - 509个字节</li>
+</ul>
+
+<p>在这个例子中，当gzip不在播放时，空格将输出大小增加了8.5％，当gzip处于播放状态时，输出大小增加了2.6％。另一方面，<strong>gzipping本身</strong> 的行为<strong>提供了超过60％的带宽节省</strong>。由于漂亮打印的成本相对较小，因此最好默认打印，并确保支持gzip压缩！</p>
+
+<p>为了进一步说明这一点，Twitter发现在其 <a href="https://dev.twitter.com/docs/streaming-apis">Streaming API</a> 上启用gzip压缩时<a href="https://dev.twitter.com/blog/announcing-gzip-compression-streaming-apis">节省</a> 了 <a href="https://dev.twitter.com/blog/announcing-gzip-compression-streaming-apis">80％（在某些情况下）</a>。Stack Exchange甚至 <a href="https://api.stackexchange.com/docs/compression">永远不会返回未压缩的响应</a> ！[](<a href="https://dev.twitter.com/docs/streaming-apis)[](https://api.stackexchange.com/docs/compression">https://dev.twitter.com/docs/streaming-apis)[](https://api.stackexchange.com/docs/compression</a>)</p>
+
+<h2 id="默认情况下不要使用封装-但在需要时可以使用">默认情况下不要使用封装，但在需要时可以使用</h2>
+
+<p>许多API将其响应包装在封装中，如下所示：</p>
+
+<pre><code class="language-json">
+{
+ &quot;data&quot; : {
+  &quot;id&quot; : 123,
+  &quot;name&quot; : &quot;John&quot;
+ }
+}
+
+</code></pre>
+
+<p>这样做有几个理由 - 它可以很容易地包含额外的元数据或分页信息，一些REST客户端不允许轻松访问HTTP标头，<a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a> 请求无法访问HTTP标头。但是，随着 <a href="http://www.w3.org/TR/cors/">CORS</a> 和 <a href="http://tools.ietf.org/html/rfc5988#page-6">RFC 5988</a> 的 <a href="http://tools.ietf.org/html/rfc5988#page-6">链接头</a> 快速采用的标准，<a href="http://tools.ietf.org/html/rfc5988#page-6">封装</a> 开始变得不必要了。</p>
+
+<p>我们可以通过默认保留封装并仅在特殊情况下包络来证明API。</p>
+
+<p><strong>如何在特殊情况下使用封装？</strong></p>
+
+<p>有两种情况需要封装 - 如果API需要通过JSONP支持跨域请求，或者客户端无法使用HTTP标头。</p>
+
+<p>JSONP请求带有一个额外的查询参数（通常名为 callback 或 jsonp ），表示回调函数的名称。如果存在此参数，则API应切换到完整封装模式，它始终以200 HTTP状态代码响应并传递JSON有效内容中的实际状态代码。与响应一起传递的任何其他HTTP标头应映射到JSON字段，如下所示：</p>
+
+<pre><code class="language-javascript">
+callback_function({
+ status_code: 200,
+ next_page: &quot;https://..&quot;,
+ response: {
+  ... actual JSON response body ...
+ }
+})
+
+</code></pre>
+
+<p>同样，为了支持有限的HTTP客户端，允许一个特殊的查询参数 ？envelope = true ，它将触发完全包络（没有JSONP回调函数）。</p>
+
+<h2 id="json编码post-put和patch主体">JSON编码POST，PUT和PATCH主体</h2>
+
+<p>如果您正在阅读本文中的方法，那么您已经为所有API输出采用了JSON。我们考虑使用JSON进行API输入。</p>
+
+<p>许多API在其API请求正文中使用URL编码。URL编码正是它的声音 - 请求使用与用于在URL查询参数中编码数据的约定相同的约定来编码键值对的实体。这很简单，得到广泛支持并完成工作。</p>
+
+<p>但是，URL编码有一些问题会导致问题。它没有数据类型的概念。这会强制API解析字符串中的整数和布尔值。此外，它没有层次结构的真实概念。虽然有一些约定可以用键值对构建一些结构（比如将[]附加到表示数组的键），但这与JSON的本机层次结构无法比较。</p>
+
+<p>如果API很简单，URL编码就足够了。但是，复杂的API应该坚持使用JSON来获取API输入。无论哪种方式，选择一个并在整个API中保持一致。</p>
+
+<p>接受JSON编码的POST，PUT和PATCH请求的API还应该要求将 <code>Content-Type</code> 标头设置为 application/json 或抛出415 Unsupported Media Type HTTP状态代码。</p>
+
+<h2 id="分页">分页</h2>
+
+<p>爱好封装的API通常包括封装本身的分页数据。而且我不怪他们 - 直到最近，没有更多更好的选择。今天包含分页细节的正确方法是使用 <a href="http://tools.ietf.org/html/rfc5988#page-6">RFC 5988引入</a> 的 <a href="http://tools.ietf.org/html/rfc5988#page-6">链接头</a>。</p>
+
+<p>使用Link头的API可以返回一组现成的链接，因此API使用者不必自己构建链接。当分页 <a href="https://developers.facebook.com/docs/reference/api/pagination/">基于游标</a> 时，这尤其重要。这是一个正确使用的链接头的示例，从 <a href="http://developer.github.com/v3/#pagination">GitHub</a> 的文档中获取：</p>
+
+<pre><code class="language-http">
+Link: &lt;https://api.github.com/user/repos?page=3&amp;per_page=100&gt;; rel=&quot;next&quot;, &lt;https://api.github.com/user/repos?page=50&amp;per_page=100&gt;; rel=&quot;last&quot;
+
+</code></pre>
+
+<p>但这不是一个完整的解决方案，因为许多API都希望返回额外的分页信息，例如可用结果总数的计数。需要发送计数的API可以使用自定义HTTP标头，如 X-Total-Count。</p>
+
+<h2 id="自动加载相关的资源表示">自动加载相关的资源表示</h2>
+
+<p>在许多情况下，API使用者需要从所请求的资源加载与（或引用）相关的数据。不要求消费者针对该信息重复地访问API，而是允许相关数据与原始资源一起按需返回和加载，从而显着提高效率。</p>
+
+<p>但是，由于这 <a href="http://idbentley.com/blog/2013/03/14/should-restful-apis-include-relationships/">违反了一些RESTful原则</a> ，我们可以通过仅基于嵌入（或扩展）查询参数 来最小化我们的偏差。</p>
+
+<p>在这种情况下，embed 将是一个逗号分隔的要嵌入的字段列表。点符号可用于指代子字段。例如：</p>
+
+<p>GET <code>/tickets/12?embed=customer.name,assigned_user</code></p>
+
+<p>这将返回包含嵌入其他详细信息的票证，例如：</p>
+
+<pre><code class="language-json">
+{
+ &quot;id&quot; : 12,
+ &quot;subject&quot; : &quot;I have a question!&quot;,
+ &quot;summary&quot; : &quot;Hi, ....&quot;,
+ &quot;customer&quot; : {
+  &quot;name&quot; : &quot;Bob&quot;
+ },
+ assigned_user: {
+  &quot;id&quot; : 42,
+  &quot;name&quot; : &quot;Jim&quot;,
+ }
+}
+
+</code></pre>
+
+<p>当然，实现这样的事情的能力实际上取决于内部复杂性。这种嵌入很容易导致 <a href="http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue">N + 1选择问题</a>。</p>
+
+<h2 id="覆盖http方法">覆盖HTTP方法</h2>
+
+<p>某些HTTP客户端只能使用简单的GET和POST请求。为了提高对这些有限客户端的可访问性，API需要一种覆盖HTTP方法的方法。虽然这里没有任何硬标准，但流行的约定是接受一个请求头 <code>X-HTTP-Method-Override</code> ，其字符串值包含PUT，PATCH或DELETE之一。</p>
+
+<p>请注意，<strong>只</strong> 应在POST请求中接受 覆盖标头。GET请求永远不应该 <a href="http://programmers.stackexchange.com/questions/188860/why-shouldnt-a-get-request-change-data-on-the-server">更改服务器上的数据</a> ！</p>
+
+<h2 id="限速">限速</h2>
+
+<p>为了防止滥用，标准做法是为API添加某种速率限制。<a href="http://tools.ietf.org/html/rfc6585">RFC 6585</a> 引入了HTTP状态代码 <a href="http://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a> 以适应这种情况。</p>
+
+<p>但是，在消费者真正达到限制之前通知他们的限制是非常有用的。这是一个目前缺乏标准但是有许多 <a href="http://stackoverflow.com/questions/16022624/examples-of-http-api-rate-limiting-http-response-headers">使用HTTP响应头</a> 的 <a href="http://stackoverflow.com/questions/16022624/examples-of-http-api-rate-limiting-http-response-headers">流行约定的领域</a>。</p>
+
+<p>至少包括以下标题（使用Twitter的 <a href="https://dev.twitter.com/docs/rate-limiting/1.1">命名约定，</a> 因为标题通常没有中间词大小写）：</p>
+
+<ul>
+<li><code>X-Rate-Limit-Limit</code> - 当前期间允许的请求数</li>
+<li><code>X-Rate-Limit-Remaining</code> - 当前时间段内剩余请求的数量</li>
+<li><code>X-Rate-Limit-Reset</code> - 当前时间段内剩余的秒数</li>
+</ul>
+
+<p><strong>为什么还剩下秒数而不是X-Rate-Limit-Reset的时间戳？</strong></p>
+
+<p>时间戳包含各种有用但不必要的信息，如日期和可能的时区。API消费者真的只想知道他们什么时候可以再次发送请求，并且秒数回答这个问题，最后只需要额外的处理。它还避免了与 <a href="http://en.wikipedia.org/wiki/Clock_skew">时钟偏差</a> 相关的问题。</p>
+
+<p>某些API使用UNIX时间戳（自纪元以来的秒数）进行X速率限制重置。不要这样做！</p>
+
+<p><strong>为什么使用UNIX时间戳进行X-Rate-Limit-Reset是不好的做法？</strong></p>
+
+<p>在 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.txt">HTTP规范</a> 已经 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3">指定</a> 使用 <a href="http://www.ietf.org/rfc/rfc1123.txt">RFC 1123的日期格式</a> （目前正在使用的 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18">日期</a> ，<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.25">如果-Modified-Since的</a> 和 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.29">上次修改</a> 的HTTP头）。如果我们要指定一个采用某种时间戳的新HTTP标头，它应该遵循RFC 1123约定而不是使用UNIX时间戳。</p>
+
+<h2 id="认证">认证</h2>
+
+<p>RESTful API应该是无状态的。这意味着请求身份验证不应依赖于cookie或会话。相反，每个请求都应附带一些排序身份验证凭据。</p>
+
+<p>通过始终使用SSL，可以将身份验证凭据简化为随机生成的访问令牌，该令牌在HTTP Basic Auth的用户名字段中提供。关于这一点的好处是它完全可以浏览浏览器 - 如果 从服务器 收到 401 Unauthorized 状态代码，浏览器将弹出一个提示凭据的提示。</p>
+
+<p>但是，这种基于身份验证令牌的身份验证方法只有在用户将令牌从管理界面复制到API使用者环境的情况下才可接受。如果无法做到这一点，则应使用 <a href="http://oauth.net/2/">OAuth 2</a> 向第三方提供安全令牌转移。OAuth 2使用 <a href="http://tools.ietf.org/html/rfc6750">承载令牌</a> ，并且还依赖于SSL进行底层传输加密。</p>
+
+<p>需要支持JSONP的API需要第三种身份验证方法，因为JSONP请求无法发送HTTP Basic Auth凭证或承载令牌。在这种情况下，可以使用 特殊查询参数 access_token。注意：使用查询参数作为令牌时存在固有的安全问题，因为大多数Web服务器在服务器日志中存储查询参数。</p>
+
+<p>对于它的价值，上述所有三种方法都只是通过API边界传输令牌的方法。实际的底层令牌本身可能是相同的。</p>
+
+<h2 id="高速缓存">高速缓存</h2>
+
+<p>HTTP提供了一个内置的缓存框架！ 您所要做的就是包含一些额外的出站响应标头，并在收到一些入站请求标头时进行一些验证。</p>
+
+<p>有两种方法： <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETag</a> 和 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.29">Last-Modified</a></p>
+
+<p><strong>ETag</strong> ：生成响应时，包含一个HTTP头标记ETag，其中包含表示的哈希或校验和。只要输出表示发生更改，此值就会更改。现在，如果入站HTTP请求包含 具有匹配ETag值 的 If-None-Match 标头，则API应返回 304 Not Modified 状态代码而不是资源的输出表示。</p>
+
+<p><strong>Last-Modified</strong> ：这基本上与ETag类似，只是它使用时间戳。响应头 Last-Modified 包含 <a href="http://www.ietf.org/rfc/rfc1123.txt">RFC 1123</a> 格式 的时间戳，该时间戳 根据 If-Modified-Since进行 验证。请注意，HTTP规范有 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3">3种不同的可接受日期格式</a> ，服务器应准备接受其中任何一种。</p>
+
+<h2 id="错误">错误</h2>
+
+<p>就像HTML错误页面向访问者显示有用的错误消息一样，API应该以已知的可消费格式提供有用的错误消息。错误的表示应该与任何资源的表示没有区别，只有它自己的字段集。</p>
+
+<p>API应始终返回合理的HTTP状态代码。API错误通常分为两类：客户端问题的400系列状态代码和服务器问题的500系列状态代码。API应该至少标准化所有400系列错误都带有可消耗的JSON错误表示。如果可能（即，如果负载平衡器和反向代理可以创建自定义错误主体），则应扩展到500系列状态代码。</p>
+
+<p>JSON错误正文应该为开发人员提供一些东西 - 一个有用的错误消息，一个唯一的错误代码（可以在文档中查找更多详细信息）以及可能的详细描述。像这样的东西的JSON输出表示如下所示：</p>
+
+<pre><code class="language-json">
+{
+ &quot;code&quot; : 1234,
+ &quot;message&quot; : &quot;Something bad happened :(&quot;,
+ &quot;description&quot; : &quot;More details about the error here&quot;
+}
+
+</code></pre>
+
+<p>PUT，PATCH和POST请求的验证错误需要字段细分。最好通过使用固定的顶级错误代码进行验证失败并在其他 错误 字段中 提供详细错误来建模 ，如下所示：</p>
+
+<pre><code class="language-json">
+{
+ &quot;code&quot; : 1024,
+ &quot;message&quot; : &quot;Validation Failed&quot;,
+ &quot;errors&quot; : [
+  {
+   &quot;code&quot; : 5432,
+   &quot;field&quot; : &quot;first_name&quot;,
+   &quot;message&quot; : &quot;First name cannot have fancy characters&quot;
+  },
+  {
+    &quot;code&quot; : 5622,
+    &quot;field&quot; : &quot;password&quot;,
+    &quot;message&quot; : &quot;Password cannot be blank&quot;
+  }
+ ]
+}
+
+</code></pre>
+
+<h2 id="http状态代码">HTTP状态代码</h2>
+
+<p>HTTP定义了一堆 可以从API返回 的 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes">有意义的状态代码</a>。可以利用这些来帮助API消费者相应地路由他们的响应。我已经策划了一份你肯定应该使用的短名单：</p>
+
+<ul>
+<li>200 OK - 响应成功的GET，PUT，PATCH或DELETE。也可以用于不会导致创建的POST。</li>
+<li>201 Created - 对POST的响应，导致创建。应与 指向新资源位置的 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30">Location标头</a> 结合使用</li>
+<li>204 No Content - 对不会返回正文的成功请求的响应（如DELETE请求）</li>
+<li>304 Not Modified - 在HTTP缓存标头播放时使用</li>
+<li>400错误请求 - 请求格式错误，例如正文无法解析</li>
+<li>401 Unauthorized - 未提供或无效的身份验证详细信息时。如果从浏览器使用API​​，也可以触发auth弹出窗口</li>
+<li>403 Forbidden - 身份验证成功但经过身份验证的用户无权访问资源</li>
+<li>404 Not Found - 请求不存在的资源时</li>
+<li>405不允许的方法 - 当请求的HTTP方法不允许经过身份验证的用户时</li>
+<li>410 Gone - 表示此端点的资源不再可用。有用作旧API版本的一揽子响应</li>
+<li>415不支持的媒体类型 - 如果作为请求的一部分提供了错误的内容类型</li>
+<li>422不可处理的实体 - 用于验证错误</li>
+<li>429请求过多 - 请求因速率限制而被拒绝</li>
+</ul>
+
+<h2 id="综上所述">综上所述</h2>
+
+<p>API是开发人员的用户界面。努力确保它不仅功能齐全，而且使用愉快。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/springbootservletinitializer%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0web.xml%E8%A7%A3%E6%9E%90/" data-toggle="tooltip" data-placement="top" title="SpringBootServletInitializer如何实现web.xml解析">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Thu Feb 25, 2016</h4>
+    </section>
+    <h5 id="wc">800 Words|Read in about 4 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

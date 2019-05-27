@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Jhipster 项目之架构分析之gradlew - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="Jhipster 项目之架构分析之gradlew" />
+  <meta name="twitter:title" content="Jhipster 项目之架构分析之gradlew" />
+  <meta name="description" content="gradle 的gradlew这个工具可以，下载包裹的gradle，下面我们简单来分一下该脚本，我会通过注释来描述问题。
+#!/usr/bin/env sh # 从环境变量中找sh可执行命令 ############################################################################## ## ## Gradle start up script for UN*X ## ############################################################################## # Attempt to set APP_HOME # Resolve links: $0 may be a link # 第一个参数是程序路径 PRG=&quot;$0&quot; # Need this for relative symlinks. while [ -h &quot;$PRG&quot; ] ; do ls=`ls -ld &quot;$PRG&quot;` link=`expr &quot;$ls&quot; : &#39;.*-&gt; \(.*\)$&#39;` if expr &quot;$link&quot; : &#39;/.*&#39; &gt; /dev/null; then PRG=&quot;$link&quot; else PRG=`dirname &quot;$PRG&quot;`&quot;/$link&quot; fi done # 打印当前路径 SAVED=&quot;`pwd`&quot; # 跳转到程序路径 cd &quot;`dirname \&quot;$PRG\&quot;`/&quot; &gt;/dev/null # 获取App主目录 APP_HOME=&quot;`pwd -P`&quot; # 跳转到保存的路径 cd &quot;$SAVED&quot; &gt;/dev/null # 应用名称是Gradle APP_NAME=&quot;Gradle&quot; # 应用的基础名称，获取文件名称路径最后一行的结果 # 举个例子 basename /abc/ddec/adfa/asdf.">
+  <meta property="og:description" content="gradle 的gradlew这个工具可以，下载包裹的gradle，下面我们简单来分一下该脚本，我会通过注释来描述问题。
+#!/usr/bin/env sh # 从环境变量中找sh可执行命令 ############################################################################## ## ## Gradle start up script for UN*X ## ############################################################################## # Attempt to set APP_HOME # Resolve links: $0 may be a link # 第一个参数是程序路径 PRG=&quot;$0&quot; # Need this for relative symlinks. while [ -h &quot;$PRG&quot; ] ; do ls=`ls -ld &quot;$PRG&quot;` link=`expr &quot;$ls&quot; : &#39;.*-&gt; \(.*\)$&#39;` if expr &quot;$link&quot; : &#39;/.*&#39; &gt; /dev/null; then PRG=&quot;$link&quot; else PRG=`dirname &quot;$PRG&quot;`&quot;/$link&quot; fi done # 打印当前路径 SAVED=&quot;`pwd`&quot; # 跳转到程序路径 cd &quot;`dirname \&quot;$PRG\&quot;`/&quot; &gt;/dev/null # 获取App主目录 APP_HOME=&quot;`pwd -P`&quot; # 跳转到保存的路径 cd &quot;$SAVED&quot; &gt;/dev/null # 应用名称是Gradle APP_NAME=&quot;Gradle&quot; # 应用的基础名称，获取文件名称路径最后一行的结果 # 举个例子 basename /abc/ddec/adfa/asdf.">
+  <meta name="twitter:description" content="gradle 的gradlew这个工具可以，下载包裹的gradle，下面我们简单来分一下该脚本，我会通过注释来描述问题。
+#!/usr/bin/env sh # 从环境变量中找sh可执行命令 ############################################################################## ## ## Gradle start up …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/jhipster-gradlew-sh/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/jhipster-gradlew-sh/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Jhipster 项目之架构分析之gradlew</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">800 Words|Read in about 4 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    
+  </aside>
+  
+
+
+                <p>gradle 的gradlew这个工具可以，下载包裹的gradle，下面我们简单来分一下该脚本，我会通过注释来描述问题。</p>
+
+<pre><code class="language-bash">#!/usr/bin/env sh
+
+# 从环境变量中找sh可执行命令
+
+##############################################################################
+##
+##  Gradle start up script for UN*X
+##
+##############################################################################
+
+# Attempt to set APP_HOME
+# Resolve links: $0 may be a link
+# 第一个参数是程序路径
+PRG=&quot;$0&quot;
+# Need this for relative symlinks.
+while [ -h &quot;$PRG&quot; ] ; do
+    ls=`ls -ld &quot;$PRG&quot;`
+    link=`expr &quot;$ls&quot; : '.*-&gt; \(.*\)$'`
+    if expr &quot;$link&quot; : '/.*' &gt; /dev/null; then
+        PRG=&quot;$link&quot;
+    else
+        PRG=`dirname &quot;$PRG&quot;`&quot;/$link&quot;
+    fi
+done
+# 打印当前路径
+SAVED=&quot;`pwd`&quot;
+# 跳转到程序路径
+cd &quot;`dirname \&quot;$PRG\&quot;`/&quot; &gt;/dev/null
+# 获取App主目录
+APP_HOME=&quot;`pwd -P`&quot;
+# 跳转到保存的路径
+cd &quot;$SAVED&quot; &gt;/dev/null
+
+#  应用名称是Gradle
+APP_NAME=&quot;Gradle&quot;
+#  应用的基础名称，获取文件名称路径最后一行的结果
+#  举个例子 basename /abc/ddec/adfa/asdf.df -&gt; asdf.df
+#  举个例子 basename /abc/ddec/adfa/ -&gt; adfa
+APP_BASE_NAME=`basename &quot;$0&quot;`
+
+# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
+# 这个地方有添加默认的JVM选项，这个脚本你也可以通过JAVA_OPTS和GRADLE_OPTS选项来设置
+DEFAULT_JVM_OPTS=&quot;&quot;
+
+# Use the maximum available, or set MAX_FD != -1 to use that value.
+# 最大文件描述符
+MAX_FD=&quot;maximum&quot;
+
+# 输出警告信息
+warn () {
+    echo &quot;$*&quot;
+}
+
+# 输出信息并退出
+die () {
+    echo
+    echo &quot;$*&quot;
+    echo
+    exit 1
+}
+
+# OS specific support (must be 'true' or 'false').
+# 多操作系统支持变量，默认都不支持，通过uname来说明支持不支持
+# Cygwin是许多自由软件的集合，最初由Cygnus Solutions开发，用于各种版本的Microsoft Windows上，运行类UNIX系统。
+cygwin=false
+# MSYS是一组GNU实用程序，如bash，make，gawk和grep，可以构建依赖于传统UNIX工具的应用程序和程序。 它旨在补充MinGW和cmd shell的缺陷。
+msys=false
+# Darwin是由苹果公司于2000年所释出的一个开放源代码系统 。 Darwin是macOS和iOS操作环境的作业系统部份。
+darwin=false
+nonstop=false
+case &quot;`uname`&quot; in
+  CYGWIN* )
+    cygwin=true
+    ;;
+  Darwin* )
+    darwin=true
+    ;;
+  MINGW* )
+    msys=true
+    ;;
+  NONSTOP* )
+    nonstop=true
+    ;;
+esac
+
+# 设置类路径
+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+
+# Determine the Java command to use to start the JVM.
+# 处理JAVA_HOME环境变量，判断是否有可执行权限，处理IBM AIX小型机上的特殊的执行路径，如果没有可执行文件，则提示错误信息
+# 没有环境变量，JAVA可执行程序，直接写java
+if [ -n &quot;$JAVA_HOME&quot; ] ; then
+    if [ -x &quot;$JAVA_HOME/jre/sh/java&quot; ] ; then
+        # IBM's JDK on AIX uses strange locations for the executables
+        JAVACMD=&quot;$JAVA_HOME/jre/sh/java&quot;
+    else
+        JAVACMD=&quot;$JAVA_HOME/bin/java&quot;
+    fi
+    if [ ! -x &quot;$JAVACMD&quot; ] ; then
+        die &quot;ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
+
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation.&quot;
+    fi
+else
+    JAVACMD=&quot;java&quot;
+    which java &gt;/dev/null 2&gt;&amp;1 || die &quot;ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation.&quot;
+fi
+
+# Increase the maximum file descriptors if we can.
+# 设置最大文件描述符，
+if [ &quot;$cygwin&quot; = &quot;false&quot; -a &quot;$darwin&quot; = &quot;false&quot; -a &quot;$nonstop&quot; = &quot;false&quot; ] ; then
+    MAX_FD_LIMIT=`ulimit -H -n`
+    if [ $? -eq 0 ] ; then
+        if [ &quot;$MAX_FD&quot; = &quot;maximum&quot; -o &quot;$MAX_FD&quot; = &quot;max&quot; ] ; then
+            MAX_FD=&quot;$MAX_FD_LIMIT&quot;
+        fi
+        ulimit -n $MAX_FD
+        if [ $? -ne 0 ] ; then
+            warn &quot;Could not set maximum file descriptor limit: $MAX_FD&quot;
+        fi
+    else
+        warn &quot;Could not query maximum file descriptor limit: $MAX_FD_LIMIT&quot;
+    fi
+fi
+
+# For Darwin, add options to specify how the application appears in the dock
+# 苹果系统，设置Dock设置
+if $darwin; then
+    GRADLE_OPTS=&quot;$GRADLE_OPTS \&quot;-Xdock:name=$APP_NAME\&quot; \&quot;-Xdock:icon=$APP_HOME/media/gradle.icns\&quot;&quot;
+fi
+
+# For Cygwin, switch paths to Windows format before running java
+# cywin说明是window，在运行Java前切换路径格式为window的
+if $cygwin ; then
+    APP_HOME=`cygpath --path --mixed &quot;$APP_HOME&quot;`
+    CLASSPATH=`cygpath --path --mixed &quot;$CLASSPATH&quot;`
+    JAVACMD=`cygpath --unix &quot;$JAVACMD&quot;`
+
+    # We build the pattern for arguments to be converted via cygpath
+    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2&gt;/dev/null`
+    SEP=&quot;&quot;
+    for dir in $ROOTDIRSRAW ; do
+        ROOTDIRS=&quot;$ROOTDIRS$SEP$dir&quot;
+        SEP=&quot;|&quot;
+    done
+    OURCYGPATTERN=&quot;(^($ROOTDIRS))&quot;
+    # Add a user-defined pattern to the cygpath arguments
+    if [ &quot;$GRADLE_CYGPATTERN&quot; != &quot;&quot; ] ; then
+        OURCYGPATTERN=&quot;$OURCYGPATTERN|($GRADLE_CYGPATTERN)&quot;
+    fi
+    # Now convert the arguments - kludge to limit ourselves to /bin/sh
+    i=0
+    for arg in &quot;$@&quot; ; do
+        CHECK=`echo &quot;$arg&quot;|egrep -c &quot;$OURCYGPATTERN&quot; -`
+        CHECK2=`echo &quot;$arg&quot;|egrep -c &quot;^-&quot;`                                 ### Determine if an option
+
+        if [ $CHECK -ne 0 ] &amp;&amp; [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
+            eval `echo args$i`=`cygpath --path --ignore --mixed &quot;$arg&quot;`
+        else
+            eval `echo args$i`=&quot;\&quot;$arg\&quot;&quot;
+        fi
+        i=$((i+1))
+    done
+    case $i in
+        (0) set -- ;;
+        (1) set -- &quot;$args0&quot; ;;
+        (2) set -- &quot;$args0&quot; &quot;$args1&quot; ;;
+        (3) set -- &quot;$args0&quot; &quot;$args1&quot; &quot;$args2&quot; ;;
+        (4) set -- &quot;$args0&quot; &quot;$args1&quot; &quot;$args2&quot; &quot;$args3&quot; ;;
+        (5) set -- &quot;$args0&quot; &quot;$args1&quot; &quot;$args2&quot; &quot;$args3&quot; &quot;$args4&quot; ;;
+        (6) set -- &quot;$args0&quot; &quot;$args1&quot; &quot;$args2&quot; &quot;$args3&quot; &quot;$args4&quot; &quot;$args5&quot; ;;
+        (7) set -- &quot;$args0&quot; &quot;$args1&quot; &quot;$args2&quot; &quot;$args3&quot; &quot;$args4&quot; &quot;$args5&quot; &quot;$args6&quot; ;;
+        (8) set -- &quot;$args0&quot; &quot;$args1&quot; &quot;$args2&quot; &quot;$args3&quot; &quot;$args4&quot; &quot;$args5&quot; &quot;$args6&quot; &quot;$args7&quot; ;;
+        (9) set -- &quot;$args0&quot; &quot;$args1&quot; &quot;$args2&quot; &quot;$args3&quot; &quot;$args4&quot; &quot;$args5&quot; &quot;$args6&quot; &quot;$args7&quot; &quot;$args8&quot; ;;
+    esac
+fi
+
+# Escape application args
+# 保存设置
+save () {
+    for i do printf %s\\n &quot;$i&quot; | sed &quot;s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/&quot; ; done
+    echo &quot; &quot;
+}
+APP_ARGS=$(save &quot;$@&quot;)
+
+# Collect all arguments for the java command, following the shell quoting and substitution rules
+# 给Java命令搜集所有参数
+eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS &quot;\&quot;-Dorg.gradle.appname=$APP_BASE_NAME\&quot;&quot; -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; org.gradle.wrapper.GradleWrapperMain &quot;$APP_ARGS&quot;
+
+# by default we should be in the correct project dir, but when run from Finder on Mac, the cwd is wrong
+# 如果是苹果系统，需要调整路径，因为cwd的路径是错误的
+if [ &quot;$(uname)&quot; = &quot;Darwin&quot; ] &amp;&amp; [ &quot;$HOME&quot; = &quot;$PWD&quot; ]; then
+  cd &quot;$(dirname &quot;$0&quot;)&quot;
+fi
+
+# 用Java执行前面设置的命令
+exec &quot;$JAVACMD&quot; &quot;$@&quot;
+
+</code></pre>
+
+<p>内容并不是很多，命令主要分了几块，多系统支持，搜集Java执行程序参数，警告输出工具方法等，具体的内容都在命令的注释上，方便易懂。本篇到此结束了。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/jhipster-gradlew.bat/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之gradlew.bat">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/jhipster-gradle-properties/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之gradle.properteis">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">800 Words|Read in about 4 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

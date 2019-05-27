@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on 殷龙飞的博客</title>
+    <link>https://yinlongfei.com/tags/</link>
+    <description>Recent content in Tags on 殷龙飞的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Tue, 05 Mar 2019 20:18:57 +0800</lastBuildDate>
+    
+	<atom:link href="https://yinlongfei.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Knative</title>
+      <link>https://yinlongfei.com/tags/knative/</link>
+      <pubDate>Tue, 05 Mar 2019 20:18:57 +0800</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/knative/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>https://yinlongfei.com/tags/kubernetes/</link>
+      <pubDate>Tue, 05 Mar 2019 20:18:57 +0800</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cilium</title>
+      <link>https://yinlongfei.com/tags/cilium/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/cilium/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dns</title>
+      <link>https://yinlongfei.com/tags/dns/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/dns/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>encryption</title>
+      <link>https://yinlongfei.com/tags/encryption/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/encryption/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>istio</title>
+      <link>https://yinlongfei.com/tags/istio/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/istio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>microservices</title>
+      <link>https://yinlongfei.com/tags/microservices/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/microservices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>monitor</title>
+      <link>https://yinlongfei.com/tags/monitor/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/monitor/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>multi-cluster</title>
+      <link>https://yinlongfei.com/tags/multi-cluster/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/multi-cluster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>multi-mesh</title>
+      <link>https://yinlongfei.com/tags/multi-mesh/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/multi-mesh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tracing</title>
+      <link>https://yinlongfei.com/tags/tracing/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/tracing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vs</title>
+      <link>https://yinlongfei.com/tags/vs/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/tags/vs/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

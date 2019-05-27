@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Jhipster 项目之架构分析之gradle目录结构 - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="Jhipster 项目之架构分析之gradle目录结构" />
+  <meta name="twitter:title" content="Jhipster 项目之架构分析之gradle目录结构" />
+  <meta name="description" content="jhipster是一个快速生成项目的脚手架，能够快速提高开发效率，本身并不是一个开发技术，但是这个东西本身实际上是一个最佳实践，我们可以看看他的最佳实践做一些学习。
+项目目录结构 项目的目录结构如上图所示，接下来，咱们详细的讲解一下目录结构的作用。 其中.gradle,.idea,node_modules,out，build这几个文件是工具自动生成文件，咱们不需要了解，就不细说这个了，
+.jhipster目录 这个目录中都是定义的实体配置，还有就是jhi提供的钩子，可以在开发插件时利用这些钩子做一些有意思的事情，比如给实体添加实体审核的,这里面的文件大部分情况下我们是不需要动地，因为这些文件是jhipster自动帮忙生成的。
+{ &quot;name&quot;: &quot;About&quot;, &quot;fields&quot;: [ { &quot;fieldName&quot;: &quot;info&quot;, &quot;fieldType&quot;: &quot;String&quot; }, { &quot;fieldName&quot;: &quot;content&quot;, &quot;fieldType&quot;: &quot;String&quot; }, { &quot;fieldName&quot;: &quot;order&quot;, &quot;fieldType&quot;: &quot;Long&quot; } ], &quot;relationships&quot;: [], &quot;changelogDate&quot;: &quot;20190105111036&quot;, &quot;entityTableName&quot;: &quot;about&quot;, &quot;dto&quot;: &quot;no&quot;, &quot;pagination&quot;: &quot;no&quot;, &quot;service&quot;: &quot;no&quot;, &quot;jpaMetamodelFiltering&quot;: false, &quot;fluentMethods&quot;: true, &quot;clientRootFolder&quot;: &quot;&quot;, &quot;applications&quot;: &quot;*&quot;, &quot;enableEntityAudit&quot;: true }  这里面有关系设置，记录liqubase数据库中的变更日期集，实体表明，是否用dto，是否用分页，是否用service，是否开启jpa元数据模型过滤，客户端 根目录，是否启用实体审核等信息。
+[ { &quot;name&quot;: &quot;Entity Audit generator&quot;, &quot;npmPackageName&quot;: &quot;generator-jhipster-entity-audit&quot;, &quot;description&quot;: &quot;Add support for entity audit and audit log page&quot;, &quot;hookFor&quot;: &quot;entity&quot;, &quot;hookType&quot;: &quot;post&quot;, &quot;generatorCallback&quot;: &quot;jhipster-entity-audit:entity&quot; } ]  插件类型，执行时间，执行回调">
+  <meta property="og:description" content="jhipster是一个快速生成项目的脚手架，能够快速提高开发效率，本身并不是一个开发技术，但是这个东西本身实际上是一个最佳实践，我们可以看看他的最佳实践做一些学习。
+项目目录结构 项目的目录结构如上图所示，接下来，咱们详细的讲解一下目录结构的作用。 其中.gradle,.idea,node_modules,out，build这几个文件是工具自动生成文件，咱们不需要了解，就不细说这个了，
+.jhipster目录 这个目录中都是定义的实体配置，还有就是jhi提供的钩子，可以在开发插件时利用这些钩子做一些有意思的事情，比如给实体添加实体审核的,这里面的文件大部分情况下我们是不需要动地，因为这些文件是jhipster自动帮忙生成的。
+{ &quot;name&quot;: &quot;About&quot;, &quot;fields&quot;: [ { &quot;fieldName&quot;: &quot;info&quot;, &quot;fieldType&quot;: &quot;String&quot; }, { &quot;fieldName&quot;: &quot;content&quot;, &quot;fieldType&quot;: &quot;String&quot; }, { &quot;fieldName&quot;: &quot;order&quot;, &quot;fieldType&quot;: &quot;Long&quot; } ], &quot;relationships&quot;: [], &quot;changelogDate&quot;: &quot;20190105111036&quot;, &quot;entityTableName&quot;: &quot;about&quot;, &quot;dto&quot;: &quot;no&quot;, &quot;pagination&quot;: &quot;no&quot;, &quot;service&quot;: &quot;no&quot;, &quot;jpaMetamodelFiltering&quot;: false, &quot;fluentMethods&quot;: true, &quot;clientRootFolder&quot;: &quot;&quot;, &quot;applications&quot;: &quot;*&quot;, &quot;enableEntityAudit&quot;: true }  这里面有关系设置，记录liqubase数据库中的变更日期集，实体表明，是否用dto，是否用分页，是否用service，是否开启jpa元数据模型过滤，客户端 根目录，是否启用实体审核等信息。
+[ { &quot;name&quot;: &quot;Entity Audit generator&quot;, &quot;npmPackageName&quot;: &quot;generator-jhipster-entity-audit&quot;, &quot;description&quot;: &quot;Add support for entity audit and audit log page&quot;, &quot;hookFor&quot;: &quot;entity&quot;, &quot;hookType&quot;: &quot;post&quot;, &quot;generatorCallback&quot;: &quot;jhipster-entity-audit:entity&quot; } ]  插件类型，执行时间，执行回调">
+  <meta name="twitter:description" content="jhipster是一个快速生成项目的脚手架，能够快速提高开发效率，本身并不是一个开发技术，但是这个东西本身实际上是一个最佳实践，我们可以看看他的最佳实践做一些学习。
+项目目录结构 项目的目录结构如上图所示，接下来，咱们详细的讲解一下目录结构的作用。 其中.gradle,.idea,node_modules,out，build这几个文件是工具自动生成文件，咱们不需要了解，就不细说这个了， …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/jhipster-architecture/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/jhipster-architecture/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Jhipster 项目之架构分析之gradle目录结构</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">700 Words|Read in about 4 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#项目目录结构">项目目录结构</a>
+<ul>
+<li><a href="#jhipster目录">.jhipster目录</a></li>
+<li><a href="#gradle目录">gradle目录</a>
+<ul>
+<li><a href="#docker-gralde">docker.gralde</a></li>
+<li><a href="#profile-dev-gradle">profile_dev.gradle</a></li>
+<li><a href="#profile-prod-gradle">profile_prod.gradle</a></li>
+<li><a href="#sonar-gradle">sonar.gradle</a></li>
+<li><a href="#zipkin-gradle">zipkin.gradle</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+  
+
+
+                
+
+<p>jhipster是一个快速生成项目的脚手架，能够快速提高开发效率，本身并不是一个开发技术，但是这个东西本身实际上是一个最佳实践，我们可以看看他的最佳实践做一些学习。</p>
+
+<h2 id="项目目录结构">项目目录结构</h2>
+
+<p><img src="https://ws1.sinaimg.cn/large/61411417ly1g0k8i05y8pj20ja0j8q4c.jpg" alt="项目的目录结构" /></p>
+
+<p>项目的目录结构如上图所示，接下来，咱们详细的讲解一下目录结构的作用。
+其中<code>.gradle</code>,<code>.idea</code>,<code>node_modules</code>,<code>out</code>，<code>build</code>这几个文件是工具自动生成文件，咱们不需要了解，就不细说这个了，</p>
+
+<h3 id="jhipster目录">.jhipster目录</h3>
+
+<p>这个目录中都是定义的实体配置，还有就是jhi提供的钩子，可以在开发插件时利用这些钩子做一些有意思的事情，比如给实体添加实体审核的,这里面的文件大部分情况下我们是不需要动地，因为这些文件是jhipster自动帮忙生成的。</p>
+
+<pre><code class="language-json">{
+    &quot;name&quot;: &quot;About&quot;,
+    &quot;fields&quot;: [
+        {
+            &quot;fieldName&quot;: &quot;info&quot;,
+            &quot;fieldType&quot;: &quot;String&quot;
+        },
+        {
+            &quot;fieldName&quot;: &quot;content&quot;,
+            &quot;fieldType&quot;: &quot;String&quot;
+        },
+        {
+            &quot;fieldName&quot;: &quot;order&quot;,
+            &quot;fieldType&quot;: &quot;Long&quot;
+        }
+    ],
+    &quot;relationships&quot;: [],
+    &quot;changelogDate&quot;: &quot;20190105111036&quot;,
+    &quot;entityTableName&quot;: &quot;about&quot;,
+    &quot;dto&quot;: &quot;no&quot;,
+    &quot;pagination&quot;: &quot;no&quot;,
+    &quot;service&quot;: &quot;no&quot;,
+    &quot;jpaMetamodelFiltering&quot;: false,
+    &quot;fluentMethods&quot;: true,
+    &quot;clientRootFolder&quot;: &quot;&quot;,
+    &quot;applications&quot;: &quot;*&quot;,
+    &quot;enableEntityAudit&quot;: true
+}
+
+</code></pre>
+
+<p>这里面有关系设置，记录liqubase数据库中的变更日期集，实体表明，是否用dto，是否用分页，是否用service，是否开启jpa元数据模型过滤，客户端 根目录，是否启用实体审核等信息。</p>
+
+<pre><code class="language-json">[
+    {
+        &quot;name&quot;: &quot;Entity Audit generator&quot;,
+        &quot;npmPackageName&quot;: &quot;generator-jhipster-entity-audit&quot;,
+        &quot;description&quot;: &quot;Add support for entity audit and audit log page&quot;,
+        &quot;hookFor&quot;: &quot;entity&quot;,
+        &quot;hookType&quot;: &quot;post&quot;,
+        &quot;generatorCallback&quot;: &quot;jhipster-entity-audit:entity&quot;
+    }
+]
+</code></pre>
+
+<p>插件类型，执行时间，执行回调</p>
+
+<h3 id="gradle目录">gradle目录</h3>
+
+<p>本部分内容需要有gradle知识，作为铺垫，如果不了解gradle，可以看我有关gradle中的篇幅，gradle目录本身作用是存放gradle-wrapper的属性，这些东西是，但是jhipster把gradle中的一些工用的gradle相关的配置单独分离出来，放到这里，例如<code>docker</code>，<code>profile_dev</code>,<code>profile_prod</code>,<code>sonar</code>,<code>zipkin</code>配置
+下面咱们分别讲一下里面的内容，首先讲docker.gralde，目录中的文章</p>
+
+<h4 id="docker-gralde">docker.gralde</h4>
+
+<pre><code class="language-gradle">buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        //设置jib的依赖jar包，这个地方设置依赖后，下面就可以用apply plugin 引入插件
+        classpath &quot;gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:0.9.11&quot;
+    }
+}
+//利用jib来生成docker
+apply plugin: com.google.cloud.tools.jib.gradle.JibPlugin
+
+jib {
+    from {
+        // 基于openjdk8作为底层镜像
+        image = 'openjdk:8-jre-alpine'
+    }
+    to {
+        //最后生成的镜像名称
+        image = 'demo:latest'
+    }
+    container {
+        //由于jib生成的镜像没有sh，所以需要在这个地方设置一个入口执行脚本，脚本会在项目目录下src/main/jib/entrypoinit.sh
+        entrypoint = ['sh', '-c', 'chmod +x /entrypoint.sh &amp;&amp; sync &amp;&amp; /entrypoint.sh']
+        // 设置端口
+        ports = ['8080']
+        // 设置环境变量
+        environment = [
+            SPRING_OUTPUT_ANSI_ENABLED: 'ALWAYS',
+            JHIPSTER_SLEEP: '0'
+        ]
+        // 使用当前时间戳
+        useCurrentTimestamp = true
+    }
+}
+// 定义任务来处理静态资源到镜像中，自定义文件资源复制
+task copyWwwIntoStatic (type: Copy) {
+    from 'build/www/'
+    into 'build/resources/main/static'
+}
+// 设置构建依赖，
+jibDockerBuild.dependsOn copyWwwIntoStatic
+
+</code></pre>
+
+<p>这个生成docker镜像的工具用的是谷歌去年开源的<a href="https://github.com/GoogleContainerTools/jib">jib</a>工具</p>
+
+<h4 id="profile-dev-gradle">profile_dev.gradle</h4>
+
+<p>开发环境中的默认配置，这个文件的作用，激活spring中的profile文件，在开发中会设置dev（开发中的环境），prod（生产的环境），profile_dev激活dev的配置文件，并且做开发环境中的相关设置，下面我们会详细介绍，会在注释中说明，</p>
+
+<pre><code class="language-gradle">// 导入操作系统相关的配置，这个导入暂时并没有起作用
+import org.gradle.internal.os.OperatingSystem
+
+//使用springframework.boot的插件，设置bootRun
+apply plugin: 'org.springframework.boot'
+// 使用node插件，可以处理node相关的任务，处理webpack构建
+apply plugin: 'com.moowork.node'
+
+dependencies {
+    // spring boot的开发工具，方便热部署
+    compile &quot;org.springframework.boot:spring-boot-devtools&quot;
+    //  h2数据库驱动依赖，一般h2的数据库会在开发环境是使用，由于使用的是jpa，开发的代码无关数据库，这样在做开发，测试是更方便
+    compile &quot;com.h2database:h2&quot;
+}
+// 定义
+def profiles = 'dev'
+// project.hasProperty 是判断gradle.properties中的属性，
+if (project.hasProperty('no-liquibase')) {
+    profiles += ',no-liquibase'
+}
+if (project.hasProperty('tls')) {
+    profiles += ',tls'
+}
+// bootRun springboot中的任务，这里启动时，没有设置其他的参数
+bootRun {
+    args = []
+}
+
+//新建任务构建webpack开发
+task webpackBuildDev(type: NpmTask, dependsOn: 'npm_install') {
+     // 设置输入目录
+    inputs.dir(&quot;src/main/webapp/&quot;)
+    // 设置输入文件，从目录中获取所有文件树
+    inputs.files(fileTree('src/main/webapp/'))
+    // 设置构建目录
+    outputs.dir(&quot;build/www/&quot;)
+    // 设置输出出文件
+    outputs.file(&quot;build/www/app/main.bundle.js&quot;)
+    args = [&quot;run&quot;, &quot;webpack:build&quot;]
+}
+
+// 复制到静态文件
+task copyIntoStatic (type: Copy) {
+    // 从构建的输出结果
+    from 'build/www/'
+    // 复制指定的静态资源目录
+    into 'build/resources/main/static'
+}
+
+// 处理资源文件
+processResources {
+    // 过滤资源文件，替换资源文件中定义的值
+    filesMatching('**/application.yml') {
+        filter {
+          // 版本的值在build.gradle设置的值
+            it.replace('#project.version#', version)
+        }
+        filter {
+            // 替换spring激活的属性
+            it.replace('#spring.profiles.active#', profiles)
+        }
+    }
+}
+// 处理资源文件，构建webpack
+processResources.dependsOn webpackBuildDev
+// 复制静态文件，处理静态文件
+copyIntoStatic.dependsOn processResources
+// 生成boot的jar ，复制静态文件
+bootJar.dependsOn copyIntoStatic
+
+</code></pre>
+
+<h4 id="profile-prod-gradle">profile_prod.gradle</h4>
+
+<pre><code class="language-gradle">// springboot插件
+apply plugin: 'org.springframework.boot'
+// git插件
+apply plugin: 'com.gorylenko.gradle-git-properties'
+// node插件
+apply plugin: 'com.moowork.node'
+
+dependencies {
+    // 测试依赖jar包中h2
+    testCompile &quot;com.h2database:h2&quot;
+}
+
+// 定义profile，设置默认值为prod
+def profiles = 'prod'
+// 设置忽略liquibase
+if (project.hasProperty('no-liquibase')) {
+    profiles += ',no-liquibase'
+}
+
+// 设置swagger
+if (project.hasProperty('swagger')) {
+    profiles += ',swagger'
+}
+
+// boot启动设置
+bootRun {
+    args = []
+}
+// webpack测试
+task webpack_test(type: NpmTask, dependsOn: 'npm_install') {
+    args = [&quot;run&quot;, &quot;webpack:test&quot;]
+}
+
+// webpack生产
+task webpack(type: NpmTask, dependsOn: 'npm_install') {
+    args = [&quot;run&quot;, &quot;webpack:prod&quot;]
+}
+
+//复制静态资源
+task copyIntoStatic (type: Copy) {
+    from 'build/www/'
+    into 'build/resources/main/static'
+}
+
+// 处理资源
+processResources {
+    filesMatching('**/application.yml') {
+        filter {
+            //替换项目版本
+            it.replace('#project.version#', version)
+        }
+        filter {
+            // 替换激活的profile
+            it.replace('#spring.profiles.active#', profiles)
+        }
+    }
+}
+
+// 生成git属性，这个信息暂时不知道哪里有处理，如果有知道，可以告诉我
+generateGitProperties {
+    onlyIf {
+        // 源文件不为空时生成git属性信息
+        !source.isEmpty()
+    }
+}
+
+// git属性，包括git.branch（git的分支信息）,git.commit.id.abbrev（git提交的信息）,git.commit.id.describe（git提交新的描述信息）,后两个属性是干嘛的
+gitProperties {
+    keys = ['git.branch', 'git.commit.id.abbrev', 'git.commit.id.describe']
+}
+// 测试依赖webpack_test(就是要webpack_test先执行)
+test.dependsOn webpack_test
+// 处理资源（处理资源需要依赖webpack，让webpack先执行）
+processResources.dependsOn webpack
+// 复制静态资源(复制静态资源文件前，先执行处理资源)
+copyIntoStatic.dependsOn processResources
+// 生成springboot格式的jar包（生成springboot格式的jar包前先把静态资源的任务执行了）
+bootJar.dependsOn copyIntoStatic
+
+</code></pre>
+
+<h4 id="sonar-gradle">sonar.gradle</h4>
+
+<p>对项目进行扫描</p>
+
+<pre><code class="language-gradle">// 设置sonar插件（代码质量扫描插件）
+apply plugin: &quot;org.sonarqube&quot;
+// 设置代码覆盖插件
+apply plugin: 'jacoco'
+
+// 设置工具版本
+jacoco {
+    toolVersion = '0.8.2'
+}
+
+// 代码扫描结果，设置报告结果为xml格式的
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+// 代码质量扫描插件设置
+sonarqube {
+    properties {
+        // 设置代码质量的服务器路径
+        property &quot;sonar.host.url&quot;, &quot;http://localhost:9001&quot;
+        // 设置排除扫描的路径
+        property &quot;sonar.exclusions&quot;, &quot;src/main/webapp/content/**/*.*,src/main/webapp/i18n/*.js, build/www/**/*.*&quot;
+        // 设置问题忽略标准，例如，没有文档的api，
+        property &quot;sonar.issue.ignore.multicriteria&quot;, &quot;S3437,S4502,S4684,UndocumentedApi,BoldAndItalicTagsCheck&quot;
+
+        // Rule https://sonarcloud.io/coding_rules?open=Web%3ABoldAndItalicTagsCheck&amp;rule_key=Web%3ABoldAndItalicTagsCheck is ignored. Even if we agree that using the &quot;i&quot; tag is an awful practice, this is what is recommended by http://fontawesome.io/examples/
+        property &quot;sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.resourceKey&quot;, &quot;&gt;src/main/webapp/app/**/*.*&quot;
+        property &quot;sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.ruleKey&quot;, &quot;Web:BoldAndItalicTagsCheck&quot;
+
+        // Rule https://sonarcloud.io/coding_rules?open=squid%3AS3437&amp;rule_key=squid%3AS3437 is ignored, as a JPA-managed field cannot be transient
+        property &quot;sonar.issue.ignore.multicriteria.S3437.resourceKey&quot;, &quot;src/main/java/**/*&quot;
+        property &quot;sonar.issue.ignore.multicriteria.S3437.ruleKey&quot;, &quot;squid:S3437&quot;
+
+        // Rule https://sonarcloud.io/coding_rules?open=squid%3AUndocumentedApi&amp;rule_key=squid%3AUndocumentedApi is ignored, as we want to follow &quot;clean code&quot; guidelines and classes, methods and arguments names should be self-explanatory
+        property &quot;sonar.issue.ignore.multicriteria.UndocumentedApi.resourceKey&quot;, &quot;src/main/java/**/*&quot;
+        property &quot;sonar.issue.ignore.multicriteria.UndocumentedApi.ruleKey&quot;, &quot;squid:UndocumentedApi&quot;
+        // Rule https://sonarcloud.io/coding_rules?open=squid%3AS4502&amp;rule_key=squid%3AS4502 is ignored, as for JWT tokens we are not subject to CSRF attack
+        property &quot;sonar.issue.ignore.multicriteria.S4502.resourceKey&quot;, &quot;src/main/java/**/*&quot;
+        property &quot;sonar.issue.ignore.multicriteria.S4502.ruleKey&quot;, &quot;squid:S4502&quot;
+
+        // Rule https://sonarcloud.io/coding_rules?open=squid%3AS4684&amp;rule_key=squid%3AS4684
+        property &quot;sonar.issue.ignore.multicriteria.S4684.resourceKey&quot;, &quot;src/main/java/**/*&quot;
+        property &quot;sonar.issue.ignore.multicriteria.S4684.ruleKey&quot;, &quot;squid:S4684&quot;
+
+        // 设置代码覆盖报告路径
+        property &quot;sonar.jacoco.reportPaths&quot;, &quot;${project.buildDir}/jacoco/test.exec&quot;
+        // 设置代码覆盖插件为jacoco
+        property &quot;sonar.java.codeCoveragePlugin&quot;, &quot;jacoco&quot;
+        // 代码执行报告路径
+        property &quot;sonar.testExecutionReportPaths&quot;, &quot;${project.buildDir}/test-results/jest/TESTS-results-sonar.xml&quot;
+        // typescript报告路径
+        property &quot;sonar.typescript.lcov.reportPaths&quot;, &quot;${project.buildDir}/test-results/lcov.info&quot;
+        // 单元测试报告路径
+        property &quot;sonar.junit.reportPaths&quot;, &quot;${project.buildDir}/test-results/test&quot;
+        //  设置源代码路径
+        property &quot;sonar.sources&quot;, &quot;${project.projectDir}/src/main/&quot;
+        //  设置测试代码路径
+        property &quot;sonar.tests&quot;, &quot;${project.projectDir}/src/test/&quot;
+    }
+}
+</code></pre>
+
+<h4 id="zipkin-gradle">zipkin.gradle</h4>
+
+<p>zipkin 微服务项目调用链跟踪的jar</p>
+
+<pre><code class="language-gradle">dependencies {
+    // spring cloud的zipkin的依赖
+    compile &quot;org.springframework.cloud:spring-cloud-starter-zipkin&quot;
+}
+</code></pre>
+
+<p>介于篇幅，本篇介绍的内容到此为止，下篇博客会讲src目录中的相关内容</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/jhipster-huskrc/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之huskrc">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/jhipster-gradlew.bat/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之gradlew.bat">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">700 Words|Read in about 4 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

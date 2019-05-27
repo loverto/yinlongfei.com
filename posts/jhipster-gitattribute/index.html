@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Jhipster 项目之架构分析之gitattributes - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="Jhipster 项目之架构分析之gitattributes" />
+  <meta name="twitter:title" content="Jhipster 项目之架构分析之gitattributes" />
+  <meta name="description" content="在开发一个web项目时，如果用git管理一个项目，项目中有几十中格式的文件时，git能否正常的处理这些文件呢？比如图片这种二进制，比如window平台下的bat文件在git仓库上是否应该是一样的，比如jar包这种文件，等等，像这种繁多的文件有时候并不是git默认配置情况下可以处理的非常优秀的，那么下面可以用git的属性, 的配置，让git了解这些文件具体该如何处理，并且配置什么类型的文件应该是什么格式，什么结尾，这个文件定义了常见的文件格式
+# This file is inspired by https://github.com/alexkaratarakis/gitattributes # # Auto detect text files and perform LF normalization # http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/ * text=auto # The above will handle all files NOT found below # These files are text and should be normalized (Convert crlf =&gt; lf) *.bat text eol=crlf *.coffee text *.css text *.cql text *.df text *.ejs text *.html text *.java text *.js text *.json text *.less text *.properties text *.">
+  <meta property="og:description" content="在开发一个web项目时，如果用git管理一个项目，项目中有几十中格式的文件时，git能否正常的处理这些文件呢？比如图片这种二进制，比如window平台下的bat文件在git仓库上是否应该是一样的，比如jar包这种文件，等等，像这种繁多的文件有时候并不是git默认配置情况下可以处理的非常优秀的，那么下面可以用git的属性, 的配置，让git了解这些文件具体该如何处理，并且配置什么类型的文件应该是什么格式，什么结尾，这个文件定义了常见的文件格式
+# This file is inspired by https://github.com/alexkaratarakis/gitattributes # # Auto detect text files and perform LF normalization # http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/ * text=auto # The above will handle all files NOT found below # These files are text and should be normalized (Convert crlf =&gt; lf) *.bat text eol=crlf *.coffee text *.css text *.cql text *.df text *.ejs text *.html text *.java text *.js text *.json text *.less text *.properties text *.">
+  <meta name="twitter:description" content="在开发一个web项目时，如果用git管理一个项目，项目中有几十中格式的文件时，git能否正常的处理这些文件呢？比如图片这种二进制，比如window平台下的bat文件在git仓库上是否应该是一样的，比如jar包这种文件，等等，像这种繁多的文件有时候并不是git默认配置情况下可以处理的非常优秀的，那么下面可以用git的属性, 的配置，让git了解这些文件具体该如何处理，并且配置什么类型的文件应该是什么 …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/jhipster-gitattribute/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/jhipster-gitattribute/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Jhipster 项目之架构分析之gitattributes</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                <p>在开发一个web项目时，如果用git管理一个项目，项目中有几十中格式的文件时，git能否正常的处理这些文件呢？比如图片这种二进制，比如window平台下的bat文件在git仓库上是否应该是一样的，比如jar包这种文件，等等，像这种繁多的文件有时候并不是git默认配置情况下可以处理的非常优秀的，那么下面可以用<a href="https://git-scm.com/book/zh/v1/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git%E5%B1%9E%E6%80%A7">git的属性</a>,
+的配置，让git了解这些文件具体该如何处理，并且配置什么类型的文件应该是什么格式，什么结尾，这个文件定义了常见的文件格式</p>
+
+<pre><code class="language-txt"># This file is inspired by https://github.com/alexkaratarakis/gitattributes
+#
+# Auto detect text files and perform LF normalization
+# http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
+* text=auto
+
+# The above will handle all files NOT found below
+# These files are text and should be normalized (Convert crlf =&gt; lf)
+
+*.bat           text eol=crlf
+*.coffee        text
+*.css           text
+*.cql           text
+*.df            text
+*.ejs           text
+*.html          text
+*.java          text
+*.js            text
+*.json          text
+*.less          text
+*.properties    text
+*.sass          text
+*.scss          text
+*.sh            text eol=lf
+*.sql           text
+*.txt           text
+*.ts            text
+*.xml           text
+*.yaml          text
+*.yml           text
+
+# Documents
+*.doc           diff=astextplain
+*.DOC           diff=astextplain
+*.docx          diff=astextplain
+*.DOCX          diff=astextplain
+*.dot           diff=astextplain
+*.DOT           diff=astextplain
+*.pdf           diff=astextplain
+*.PDF           diff=astextplain
+*.rtf           diff=astextplain
+*.RTF           diff=astextplain
+*.markdown      text
+*.md            text
+*.adoc          text
+*.textile       text
+*.mustache      text
+*.csv           text
+*.tab           text
+*.tsv           text
+*.txt           text
+AUTHORS         text
+CHANGELOG       text
+CHANGES         text
+CONTRIBUTING    text
+COPYING         text
+copyright       text
+*COPYRIGHT*     text
+INSTALL         text
+license         text
+LICENSE         text
+NEWS            text
+readme          text
+*README*        text
+TODO            text
+
+# Graphics
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.tif           binary
+*.tiff          binary
+*.ico           binary
+# SVG treated as an asset (binary) by default. If you want to treat it as text,
+# comment-out the following line and uncomment the line after.
+*.svg           binary
+#*.svg          text
+*.eps           binary
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.class         binary
+*.jar           binary
+*.war           binary
+
+## LINTERS
+.csslintrc      text
+.eslintrc       text
+.jscsrc         text
+.jshintrc       text
+.jshintignore   text
+.stylelintrc    text
+
+## CONFIGS
+*.conf          text
+*.config        text
+.editorconfig   text
+.gitattributes  text
+.gitconfig      text
+.gitignore      text
+.htaccess       text
+*.npmignore     text
+
+## HEROKU
+Procfile        text
+.slugignore     text
+
+## AUDIO
+*.kar           binary
+*.m4a           binary
+*.mid           binary
+*.midi          binary
+*.mp3           binary
+*.ogg           binary
+*.ra            binary
+
+## VIDEO
+*.3gpp          binary
+*.3gp           binary
+*.as            binary
+*.asf           binary
+*.asx           binary
+*.fla           binary
+*.flv           binary
+*.m4v           binary
+*.mng           binary
+*.mov           binary
+*.mp4           binary
+*.mpeg          binary
+*.mpg           binary
+*.swc           binary
+*.swf           binary
+*.webm          binary
+
+## ARCHIVES
+*.7z            binary
+*.gz            binary
+*.rar           binary
+*.tar           binary
+*.zip           binary
+
+## FONTS
+*.ttf           binary
+*.eot           binary
+*.otf           binary
+*.woff          binary
+*.woff2         binary
+
+</code></pre>
+
+<p>上面的git属性配置文件分别定义了，常见文本，常见文档，常见图片，常见视频，java开发打包的文件，常见规则校验文件，常见的配置文件，常见归档文件格式，常见字体格式，针对这些格式，jhipster给与了默认合理的配置，配置了，文件应该是什么格式，以什么结束符号结束的，
+word等常见格式用astextplain来比较差异，这个配置文件的作用介绍到此结束。其他更详细的git操作可以参考<a href="https://git-scm.com/book/zh/v1/">git权威指南</a></p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/jhipster-gitignore/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之gitignore">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/jhipster-gradle/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之build.gradle">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

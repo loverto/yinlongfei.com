@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Jhipster 项目之架构分析之packge.json - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="Jhipster 项目之架构分析之packge.json" />
+  <meta name="twitter:title" content="Jhipster 项目之架构分析之packge.json" />
+  <meta name="description" content="由于前端的项目现在发展的日新月异，同样有类似后台的依赖管理工具，前端的依赖管理工具就是NPM（Node Package Manager），
+{ &quot;name&quot;: &quot;demo&quot;, &quot;version&quot;: &quot;0.0.0&quot;, &quot;description&quot;: &quot;Description for demo&quot;, &quot;private&quot;: true, &quot;license&quot;: &quot;UNLICENSED&quot;, &quot;cacheDirectories&quot;: [ &quot;node_modules&quot; ], &quot;dependencies&quot;: { &quot;@angular/common&quot;: &quot;7.1.0&quot;, &quot;@angular/compiler&quot;: &quot;7.1.0&quot;, &quot;@angular/core&quot;: &quot;7.1.0&quot;, &quot;@angular/forms&quot;: &quot;7.1.0&quot;, &quot;@angular/platform-browser&quot;: &quot;7.1.0&quot;, &quot;@angular/platform-browser-dynamic&quot;: &quot;7.1.0&quot;, &quot;@angular/router&quot;: &quot;7.1.0&quot;, &quot;@fortawesome/angular-fontawesome&quot;: &quot;0.3.0&quot;, &quot;@fortawesome/fontawesome-svg-core&quot;: &quot;1.2.8&quot;, &quot;@fortawesome/free-solid-svg-icons&quot;: &quot;5.5.0&quot;, &quot;@ng-bootstrap/ng-bootstrap&quot;: &quot;4.0.0&quot;, &quot;bootstrap&quot;: &quot;4.1.3&quot;, &quot;core-js&quot;: &quot;2.5.7&quot;, &quot;moment&quot;: &quot;2.22.2&quot;, &quot;ng-jhipster&quot;: &quot;0.5.6&quot;, &quot;ngx-cookie&quot;: &quot;2.0.1&quot;, &quot;ngx-infinite-scroll&quot;: &quot;6.0.1&quot;, &quot;ngx-webstorage&quot;: &quot;2.0.1&quot;, &quot;rxjs&quot;: &quot;6.3.3&quot;, &quot;swagger-ui&quot;: &quot;2.2.10&quot;, &quot;tslib&quot;: &quot;1.9.3&quot;, &quot;zone.js&quot;: &quot;0.8.26&quot;, &quot;ng-diff-match-patch&quot;: &quot;2.0.6&quot; }, &quot;devDependencies&quot;: { &quot;@angular/cli&quot;: &quot;7.">
+  <meta property="og:description" content="由于前端的项目现在发展的日新月异，同样有类似后台的依赖管理工具，前端的依赖管理工具就是NPM（Node Package Manager），
+{ &quot;name&quot;: &quot;demo&quot;, &quot;version&quot;: &quot;0.0.0&quot;, &quot;description&quot;: &quot;Description for demo&quot;, &quot;private&quot;: true, &quot;license&quot;: &quot;UNLICENSED&quot;, &quot;cacheDirectories&quot;: [ &quot;node_modules&quot; ], &quot;dependencies&quot;: { &quot;@angular/common&quot;: &quot;7.1.0&quot;, &quot;@angular/compiler&quot;: &quot;7.1.0&quot;, &quot;@angular/core&quot;: &quot;7.1.0&quot;, &quot;@angular/forms&quot;: &quot;7.1.0&quot;, &quot;@angular/platform-browser&quot;: &quot;7.1.0&quot;, &quot;@angular/platform-browser-dynamic&quot;: &quot;7.1.0&quot;, &quot;@angular/router&quot;: &quot;7.1.0&quot;, &quot;@fortawesome/angular-fontawesome&quot;: &quot;0.3.0&quot;, &quot;@fortawesome/fontawesome-svg-core&quot;: &quot;1.2.8&quot;, &quot;@fortawesome/free-solid-svg-icons&quot;: &quot;5.5.0&quot;, &quot;@ng-bootstrap/ng-bootstrap&quot;: &quot;4.0.0&quot;, &quot;bootstrap&quot;: &quot;4.1.3&quot;, &quot;core-js&quot;: &quot;2.5.7&quot;, &quot;moment&quot;: &quot;2.22.2&quot;, &quot;ng-jhipster&quot;: &quot;0.5.6&quot;, &quot;ngx-cookie&quot;: &quot;2.0.1&quot;, &quot;ngx-infinite-scroll&quot;: &quot;6.0.1&quot;, &quot;ngx-webstorage&quot;: &quot;2.0.1&quot;, &quot;rxjs&quot;: &quot;6.3.3&quot;, &quot;swagger-ui&quot;: &quot;2.2.10&quot;, &quot;tslib&quot;: &quot;1.9.3&quot;, &quot;zone.js&quot;: &quot;0.8.26&quot;, &quot;ng-diff-match-patch&quot;: &quot;2.0.6&quot; }, &quot;devDependencies&quot;: { &quot;@angular/cli&quot;: &quot;7.">
+  <meta name="twitter:description" content="由于前端的项目现在发展的日新月异，同样有类似后台的依赖管理工具，前端的依赖管理工具就是NPM（Node Package Manager），
+{ &quot;name&quot;: &quot;demo&quot;, &quot;version&quot;: &quot;0.0.0&quot;, &quot;description&quot;: &quot;Description for …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/jhipster-packge.json/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/jhipster-packge.json/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Jhipster 项目之架构分析之packge.json</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">500 Words|Read in about 3 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#package-json-中的内容简介">package.json 中的内容简介</a>
+<ul>
+<li><a href="#看一下生产环境依赖的包的含义">看一下生产环境依赖的包的含义</a></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+  
+
+
+                
+
+<p>由于前端的项目现在发展的日新月异，同样有类似后台的依赖管理工具，前端的依赖管理工具就是NPM（Node Package Manager），</p>
+
+<pre><code class="language-json">{
+    &quot;name&quot;: &quot;demo&quot;,
+    &quot;version&quot;: &quot;0.0.0&quot;,
+    &quot;description&quot;: &quot;Description for demo&quot;,
+    &quot;private&quot;: true,
+    &quot;license&quot;: &quot;UNLICENSED&quot;,
+    &quot;cacheDirectories&quot;: [
+        &quot;node_modules&quot;
+    ],
+    &quot;dependencies&quot;: {
+        &quot;@angular/common&quot;: &quot;7.1.0&quot;,
+        &quot;@angular/compiler&quot;: &quot;7.1.0&quot;,
+        &quot;@angular/core&quot;: &quot;7.1.0&quot;,
+        &quot;@angular/forms&quot;: &quot;7.1.0&quot;,
+        &quot;@angular/platform-browser&quot;: &quot;7.1.0&quot;,
+        &quot;@angular/platform-browser-dynamic&quot;: &quot;7.1.0&quot;,
+        &quot;@angular/router&quot;: &quot;7.1.0&quot;,
+        &quot;@fortawesome/angular-fontawesome&quot;: &quot;0.3.0&quot;,
+        &quot;@fortawesome/fontawesome-svg-core&quot;: &quot;1.2.8&quot;,
+        &quot;@fortawesome/free-solid-svg-icons&quot;: &quot;5.5.0&quot;,
+        &quot;@ng-bootstrap/ng-bootstrap&quot;: &quot;4.0.0&quot;,
+        &quot;bootstrap&quot;: &quot;4.1.3&quot;,
+        &quot;core-js&quot;: &quot;2.5.7&quot;,
+        &quot;moment&quot;: &quot;2.22.2&quot;,
+        &quot;ng-jhipster&quot;: &quot;0.5.6&quot;,
+        &quot;ngx-cookie&quot;: &quot;2.0.1&quot;,
+        &quot;ngx-infinite-scroll&quot;: &quot;6.0.1&quot;,
+        &quot;ngx-webstorage&quot;: &quot;2.0.1&quot;,
+        &quot;rxjs&quot;: &quot;6.3.3&quot;,
+        &quot;swagger-ui&quot;: &quot;2.2.10&quot;,
+        &quot;tslib&quot;: &quot;1.9.3&quot;,
+        &quot;zone.js&quot;: &quot;0.8.26&quot;,
+        &quot;ng-diff-match-patch&quot;: &quot;2.0.6&quot;
+    },
+    &quot;devDependencies&quot;: {
+        &quot;@angular/cli&quot;: &quot;7.0.6&quot;,
+        &quot;@angular/compiler-cli&quot;: &quot;7.1.0&quot;,
+        &quot;@ngtools/webpack&quot;: &quot;7.0.6&quot;,
+        &quot;@types/chai&quot;: &quot;4.1.7&quot;,
+        &quot;@types/chai-string&quot;: &quot;1.4.1&quot;,
+        &quot;@types/jest&quot;: &quot;23.3.9&quot;,
+        &quot;@types/mocha&quot;: &quot;5.2.5&quot;,
+        &quot;@types/node&quot;: &quot;10.12.10&quot;,
+        &quot;@types/selenium-webdriver&quot;: &quot;3.0.13&quot;,
+        &quot;angular-router-loader&quot;: &quot;0.8.5&quot;,
+        &quot;angular2-template-loader&quot;: &quot;0.6.2&quot;,
+        &quot;autoprefixer&quot;: &quot;9.3.1&quot;,
+        &quot;browser-sync&quot;: &quot;2.26.3&quot;,
+        &quot;browser-sync-webpack-plugin&quot;: &quot;2.2.2&quot;,
+        &quot;cache-loader&quot;: &quot;1.2.5&quot;,
+        &quot;chai&quot;: &quot;4.2.0&quot;,
+        &quot;chai-as-promised&quot;: &quot;7.1.1&quot;,
+        &quot;chai-string&quot;: &quot;1.5.0&quot;,
+        &quot;codelyzer&quot;: &quot;4.5.0&quot;,
+        &quot;copy-webpack-plugin&quot;: &quot;4.6.0&quot;,
+        &quot;css-loader&quot;: &quot;1.0.1&quot;,
+        &quot;file-loader&quot;: &quot;2.0.0&quot;,
+        &quot;fork-ts-checker-webpack-plugin&quot;: &quot;0.5.0&quot;,
+        &quot;friendly-errors-webpack-plugin&quot;: &quot;1.7.0&quot;,
+        &quot;generator-jhipster&quot;: &quot;5.7.1&quot;,
+        &quot;html-loader&quot;: &quot;0.5.5&quot;,
+        &quot;html-webpack-plugin&quot;: &quot;3.2.0&quot;,
+        &quot;husky&quot;: &quot;1.2.0&quot;,
+        &quot;jest&quot;: &quot;23.6.0&quot;,
+        &quot;jest-junit&quot;: &quot;5.2.0&quot;,
+        &quot;jest-preset-angular&quot;: &quot;6.0.1&quot;,
+        &quot;jest-sonar-reporter&quot;: &quot;2.0.0&quot;,
+        &quot;lint-staged&quot;: &quot;8.1.0&quot;,
+        &quot;merge-jsons-webpack-plugin&quot;: &quot;1.0.18&quot;,
+        &quot;mocha&quot;: &quot;5.2.0&quot;,
+        &quot;mini-css-extract-plugin&quot;: &quot;0.4.5&quot;,
+        &quot;moment-locales-webpack-plugin&quot;: &quot;1.0.7&quot;,
+        &quot;optimize-css-assets-webpack-plugin&quot;: &quot;5.0.1&quot;,
+        &quot;prettier&quot;: &quot;1.15.2&quot;,
+        &quot;protractor&quot;: &quot;5.4.1&quot;,
+        &quot;reflect-metadata&quot;: &quot;0.1.12&quot;,
+        &quot;rimraf&quot;: &quot;2.6.2&quot;,
+        &quot;simple-progress-webpack-plugin&quot;: &quot;1.1.2&quot;,
+        &quot;style-loader&quot;: &quot;0.23.1&quot;,
+        &quot;terser-webpack-plugin&quot;: &quot;1.1.0&quot;,
+        &quot;thread-loader&quot;: &quot;1.2.0&quot;,
+        &quot;to-string-loader&quot;: &quot;1.1.5&quot;,
+        &quot;ts-node&quot;: &quot;7.0.1&quot;,
+        &quot;ts-loader&quot;: &quot;5.3.0&quot;,
+        &quot;tslint&quot;: &quot;5.11.0&quot;,
+        &quot;tslint-config-prettier&quot;: &quot;1.16.0&quot;,
+        &quot;tslint-loader&quot;: &quot;3.6.0&quot;,
+        &quot;typescript&quot;: &quot;3.1.6&quot;,
+        &quot;postcss-loader&quot;: &quot;3.0.0&quot;,
+        &quot;webpack&quot;: &quot;4.26.0&quot;,
+        &quot;webpack-cli&quot;: &quot;3.1.2&quot;,
+        &quot;webpack-dev-server&quot;: &quot;3.1.10&quot;,
+        &quot;webpack-merge&quot;: &quot;4.1.4&quot;,
+        &quot;webpack-notifier&quot;: &quot;1.7.0&quot;,
+        &quot;webpack-visualizer-plugin&quot;: &quot;0.1.11&quot;,
+        &quot;workbox-webpack-plugin&quot;: &quot;3.6.3&quot;,
+        &quot;write-file-webpack-plugin&quot;: &quot;4.5.0&quot;
+    },
+    &quot;engines&quot;: {
+        &quot;node&quot;: &quot;&gt;=8.9.0&quot;
+    },
+    &quot;lint-staged&quot;: {
+        &quot;{,src/**/}*.{md,json,ts,css,scss}&quot;: [
+            &quot;prettier --write&quot;,
+            &quot;git add&quot;
+        ]
+    },
+    &quot;scripts&quot;: {
+        &quot;prettier:format&quot;: &quot;prettier --write \&quot;{,src/**/}*.{md,json,ts,css,scss}\&quot;&quot;,
+        &quot;lint&quot;: &quot;tslint --project tsconfig.json -e 'node_modules/**'&quot;,
+        &quot;lint:fix&quot;: &quot;npm run lint -- --fix&quot;,
+        &quot;ngc&quot;: &quot;ngc -p tsconfig-aot.json&quot;,
+        &quot;cleanup&quot;: &quot;rimraf build/{aot,www}&quot;,
+        &quot;clean-www&quot;: &quot;rimraf build//www/app/{src,build/}&quot;,
+        &quot;e2e&quot;: &quot;protractor src/test/javascript/protractor.conf.js&quot;,
+        &quot;postinstall&quot;: &quot;&quot;,
+        &quot;start&quot;: &quot;npm run webpack:dev&quot;,
+        &quot;start-tls&quot;: &quot;npm run webpack:dev -- --env.tls&quot;,
+        &quot;serve&quot;: &quot;npm run start&quot;,
+        &quot;build&quot;: &quot;npm run webpack:prod&quot;,
+        &quot;test&quot;: &quot;npm run lint &amp;&amp; jest --coverage --logHeapUsage -w=2 --config src/test/javascript/jest.conf.js&quot;,
+        &quot;test:watch&quot;: &quot;npm run test -- --watch&quot;,
+        &quot;webpack:dev&quot;: &quot;npm run webpack-dev-server -- --config webpack/webpack.dev.js --inline --hot --port=9060 --watch-content-base --env.stats=minimal&quot;,
+        &quot;webpack:dev-verbose&quot;: &quot;npm run webpack-dev-server -- --config webpack/webpack.dev.js --inline --hot --port=9060 --watch-content-base --profile --progress --env.stats=normal&quot;,
+        &quot;webpack:build:main&quot;: &quot;npm run webpack -- --config webpack/webpack.dev.js --env.stats=minimal&quot;,
+        &quot;webpack:build&quot;: &quot;npm run cleanup &amp;&amp; npm run webpack:build:main&quot;,
+        &quot;webpack:prod:main&quot;: &quot;npm run webpack -- --config webpack/webpack.prod.js --profile&quot;,
+        &quot;webpack:prod&quot;: &quot;npm run cleanup &amp;&amp; npm run webpack:prod:main &amp;&amp; npm run clean-www&quot;,
+        &quot;webpack:test&quot;: &quot;npm run test&quot;,
+        &quot;webpack-dev-server&quot;: &quot;node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js&quot;,
+        &quot;webpack&quot;: &quot;node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js&quot;
+    },
+    &quot;jestSonar&quot;: {
+        &quot;reportPath&quot;: &quot;build/test-results/jest&quot;,
+        &quot;reportFile&quot;: &quot;TESTS-results-sonar.xml&quot;
+    }
+}
+
+</code></pre>
+
+<h1 id="package-json-中的内容简介">package.json 中的内容简介</h1>
+
+<p>下面介绍一下命令中的内容</p>
+
+<p><code>name</code> 项目名称
+<code>version</code> 项目版本
+<code>description</code> 项目描述
+<code>private</code> 私有项目
+<code>license</code> 自己开发的项目不打算开源，所以不写授权协议
+<code>cacheDirectories</code> heroku 使用的缓存目录
+<code>dependencies</code> 生产环境所需要的依赖
+<code>devDependencies</code> 开发环境中所需要的依赖
+<code>engines</code> 控制nodejs版本
+<code>lint-staged</code> 校验
+<code>scripts</code> 开发中常用到的脚本汇集
+<code>jestSonar</code> 测试报告</p>
+
+<h2 id="看一下生产环境依赖的包的含义">看一下生产环境依赖的包的含义</h2>
+
+<p><code>@angular/common</code> 实现基本的Angular 指令和管道，例如NgIf，NgForOf，DecimalPipe 等包含了 Http 和http/testing和testing
+<code>@angular/compiler</code> 用于在运行时运行Angular编译器以创建ComponentFactorys 的低级服务，稍后可用于创建和呈现Component实例。
+<code>@angular/core</code> 实现Angular的核心功能，低级服务和实用程序。
+定义组件，视图层次结构，更改检测，呈现和事件处理的类基础结构。
+定义为Angular构造提供元数据和上下文的装饰器。
+定义依赖注入（DI），国际化（i18n）以及各种测试和调试工具的基础结构。
+<code>@angular/forms</code>
+在构建表单以捕获用户输入时，实现一组指令和提供程序以与本机DOM元素进行通信。</p>
+
+<p>使用此API来注册指令，构建表单和数据模型，并为表单提供验证。根据您的使用情况，验证器可以是同步的或异步的。您还可以使用接口和标记来扩展Angular中表单提供的内置功能，以创建自定义验证器和输入元素。</p>
+
+<p>Angular形式允许您：</p>
+
+<p>捕获表单的当前值和验证状态。
+跟踪并监听表单数据模型的更改。
+验证用户输入的正确性。
+创建自定义验证器和输入元素。
+您可以通过以下两种方式之一构建表单：</p>
+
+<p>反应表单使用a的现有实例FormControl或FormGroup构建表单模型。此表单模型通过指令与表单输入元素同步，以跟踪并将更改传递回表单模型。对象的值和状态的更改作为可观察对象提供。
+模板驱动的形式依赖于指令，例如NgModel和NgModelGroup用于创建表单模型，所以对形式的任何更改都通过模板沟通。</p>
+
+<p><code>@angular/platform-browser</code>支持在不同支持的浏览器上交付Angular应用程序。</p>
+
+<p>在BrowserModule默认情况下，在通过CLI创建的任何应用程序包括在内，并转口CommonModule和ApplicationModule出口，使得提供给应用程序的基本角功能。</p>
+
+<p><code>@angular/platform-browser-dynamic</code> angular 的入口</p>
+
+<p><code>@angular/router</code> 实现Angular Router服务，该服务允许在用户执行应用程序任务时从一个视图导航到下一个视图。</p>
+
+<p>定义将RouteURL路径映射到组件的对象，以及RouterOutlet用于在模板中放置路由视图的指令，以及用于配置，查询和控制路由器状态的完整API。</p>
+
+<p><code>@fortawesome/angular-fontawesome</code> angular 字体图标组件
+<code>@fortawesome/fontawesome-svg-core</code> 字体svg的核心组件
+<code>@fortawesome/free-solid-svg-icons</code> 免费字体svg图标</p>
+
+<p>介于篇幅限制，本篇博客先到次结束，后面引用的组件下篇慢慢介绍</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/jhipster-prettier/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之perttier">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/jhipster-huskrc/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之huskrc">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">500 Words|Read in about 3 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

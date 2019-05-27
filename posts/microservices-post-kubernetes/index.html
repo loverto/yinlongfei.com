@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 后 Kubernetes 时代的微服务 - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="后 Kubernetes 时代的微服务" />
+  <meta name="twitter:title" content="后 Kubernetes 时代的微服务" />
+  <meta name="description" content="原文链接：https://www.infoq.com/articles/microservices-post-kubernetes
+作者：Bilgin Ibryam 英文审校：Daniel Bryant
+译者：殷龙飞
+ 关键要点  微服务架构仍然是分布式系统最流行的架构风格。 但 Kubernetes 和云原生运动已经大规模重新定义了应用程序设计和开发。 在云原生平台上，服务的可观察性是不够的。 更基本的先决条件是通过实施健康检查，对信号做出反应，声明资源消耗等，使微服务自动化。 在后 Kubernetes 时代，服务网格技术将完全取代使用库来实现操作网络问题（例如 Hystrix 断路器）。 微服务现在必须通过从多个维度实现幂等性来设计用于“恢复”。 现代开发人员必须精通编程语言以实现业务功能，并且同样精通云原生技术以满足非功能性基础架构级别要求。  微服务炒作开始于一堆关于组织结构，团队规模，服务规模，重写和抛出服务而不是修复，避免单元测试等的极端想法。根据我的经验，大多数这些想法被证明是错误的，而不是实用的，或者至少一般不适用。 如今，大多数剩余的原则和实践都是如此通用和松散地定义，以至于它们在未来许多年都会成立，而在实践中却没有多大意义。
+在 Kubernetes 诞生之前几年被采用，微服务仍然是分布式系统最流行的架构风格。 但 Kubernetes 和云原生运动已经大规模重新定义了应用程序设计和开发的某些方面。 在本文中，我想质疑一些原始的微服务理念，并承认它们在后 Kubernetes 时代并不像以前那样强大。
+不仅可观察，而且还有自动化服务 可观察性从一开始就是微服务的基本原则。 虽然对于一般的分布式系统来说它是正确的，但今天（特别是在 Kubernetes 上），它的很大一部分是平台级别的开箱即用（例如进程运行状况检查，CPU 和内存消耗）。 最低要求是应用程序以 JSON 格式登录控制台。 从那时起，平台可以跟踪资源消耗，请求跟踪，收集所有类型的指标，错误率等，而无需太多的服务级别开发工作。
+在云原生平台上，可观察性是不够的。 更基本的先决条件是通过实施健康检查，对信号做出反应，声明资源消耗等使微服务自动化 。可以将几乎任何应用程序放入容器中并运行它。 但是要创建一个容器化的应用程序，可以通过云原生平台自动化和协调编排，需要遵循一定的规则。 遵循这些 原则和模式 ，将确保生成的容器在大多数容器编排引擎中表现得像一个优秀的云本地公民，允许以自动方式对它们进行调度，扩展和监视。
+我们希望平台不必观察服务中发生的情况，而是希望平台检测异常情况并按照声明进行协调。 无论是通过停止将流量引导到服务实例，重新启动，向上和向下扩展，还是将服务移动到另一个健康的主机，重试失败的请求或其他，这都无关紧要。 如果服务是自动化的，则所有纠正措施都会自动发生，我们只需要描述所需的状态，而不是观察和反应。 服务应该是可观察的，但也可以在没有人为干预的情况下通过平台进行整改。
+智能平台和智能服务，但有正确的责任 在从 SOA 转向微服务世界的过程中， “智能端点和哑管”的概念是服务交互的另一个根本转变。 在微服务领域，服务不依赖于集中式智能路由层的存在，而是依赖于拥有某些平台级功能的智能端点。 这是通过在每个微服务中嵌入传统 ESB 的一些功能并转换到没有业务逻辑元素的轻量级协议来实现的。
+虽然这仍然是在不可靠的网络层（使用 Hystrix 等库 ） 实现服务交互的流行方式 ，但现在，在后 Kubernetes 时代，它已经完全被服务网格技术所取代 。 有趣的是，服务网格甚至比传统的 ESB 更智能。 网格可以执行动态路由、服务发现、基于延迟的负载平衡、响应类型、指标和分布式跟踪、重试、超时，你能想到的这里都有。">
+  <meta property="og:description" content="原文链接：https://www.infoq.com/articles/microservices-post-kubernetes
+作者：Bilgin Ibryam 英文审校：Daniel Bryant
+译者：殷龙飞
+ 关键要点  微服务架构仍然是分布式系统最流行的架构风格。 但 Kubernetes 和云原生运动已经大规模重新定义了应用程序设计和开发。 在云原生平台上，服务的可观察性是不够的。 更基本的先决条件是通过实施健康检查，对信号做出反应，声明资源消耗等，使微服务自动化。 在后 Kubernetes 时代，服务网格技术将完全取代使用库来实现操作网络问题（例如 Hystrix 断路器）。 微服务现在必须通过从多个维度实现幂等性来设计用于“恢复”。 现代开发人员必须精通编程语言以实现业务功能，并且同样精通云原生技术以满足非功能性基础架构级别要求。  微服务炒作开始于一堆关于组织结构，团队规模，服务规模，重写和抛出服务而不是修复，避免单元测试等的极端想法。根据我的经验，大多数这些想法被证明是错误的，而不是实用的，或者至少一般不适用。 如今，大多数剩余的原则和实践都是如此通用和松散地定义，以至于它们在未来许多年都会成立，而在实践中却没有多大意义。
+在 Kubernetes 诞生之前几年被采用，微服务仍然是分布式系统最流行的架构风格。 但 Kubernetes 和云原生运动已经大规模重新定义了应用程序设计和开发的某些方面。 在本文中，我想质疑一些原始的微服务理念，并承认它们在后 Kubernetes 时代并不像以前那样强大。
+不仅可观察，而且还有自动化服务 可观察性从一开始就是微服务的基本原则。 虽然对于一般的分布式系统来说它是正确的，但今天（特别是在 Kubernetes 上），它的很大一部分是平台级别的开箱即用（例如进程运行状况检查，CPU 和内存消耗）。 最低要求是应用程序以 JSON 格式登录控制台。 从那时起，平台可以跟踪资源消耗，请求跟踪，收集所有类型的指标，错误率等，而无需太多的服务级别开发工作。
+在云原生平台上，可观察性是不够的。 更基本的先决条件是通过实施健康检查，对信号做出反应，声明资源消耗等使微服务自动化 。可以将几乎任何应用程序放入容器中并运行它。 但是要创建一个容器化的应用程序，可以通过云原生平台自动化和协调编排，需要遵循一定的规则。 遵循这些 原则和模式 ，将确保生成的容器在大多数容器编排引擎中表现得像一个优秀的云本地公民，允许以自动方式对它们进行调度，扩展和监视。
+我们希望平台不必观察服务中发生的情况，而是希望平台检测异常情况并按照声明进行协调。 无论是通过停止将流量引导到服务实例，重新启动，向上和向下扩展，还是将服务移动到另一个健康的主机，重试失败的请求或其他，这都无关紧要。 如果服务是自动化的，则所有纠正措施都会自动发生，我们只需要描述所需的状态，而不是观察和反应。 服务应该是可观察的，但也可以在没有人为干预的情况下通过平台进行整改。
+智能平台和智能服务，但有正确的责任 在从 SOA 转向微服务世界的过程中， “智能端点和哑管”的概念是服务交互的另一个根本转变。 在微服务领域，服务不依赖于集中式智能路由层的存在，而是依赖于拥有某些平台级功能的智能端点。 这是通过在每个微服务中嵌入传统 ESB 的一些功能并转换到没有业务逻辑元素的轻量级协议来实现的。
+虽然这仍然是在不可靠的网络层（使用 Hystrix 等库 ） 实现服务交互的流行方式 ，但现在，在后 Kubernetes 时代，它已经完全被服务网格技术所取代 。 有趣的是，服务网格甚至比传统的 ESB 更智能。 网格可以执行动态路由、服务发现、基于延迟的负载平衡、响应类型、指标和分布式跟踪、重试、超时，你能想到的这里都有。">
+  <meta name="twitter:description" content="原文链接：https://www.infoq.com/articles/microservices-post-kubernetes
+作者：Bilgin Ibryam 英文审校：Daniel Bryant
+译者：殷龙飞
+ 关键要点  微服务架构仍然是分布式系统最流行的架构风格。 但 Kubernetes 和云原生运动已经大规模重新定义了应用程序设计和开发。 在云原生平台上，服务的可观察性是不够的。  …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/microservices-post-kubernetes/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/microservices-post-kubernetes/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">后 Kubernetes 时代的微服务</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Tue Sep 4, 2018</h4>
+    </section>
+    <h5 id="wc">300 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                
+
+<blockquote>
+<p>原文链接：<a href="https://www.infoq.com/articles/microservices-post-kubernetes">https://www.infoq.com/articles/microservices-post-kubernetes</a></p>
+
+<p>作者：<a href="https://www.infoq.com/profile/Bilgin-Ibryam">Bilgin Ibryam</a>
+英文审校：<a href="https://www.infoq.com/profile/Daniel-Bryant">Daniel Bryant</a></p>
+
+<p>译者：殷龙飞</p>
+</blockquote>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tSBxtly1fuwq6p06rhj302s02sgm0.jpg" alt="" /></p>
+
+<h2 id="关键要点">关键要点</h2>
+
+<ul>
+<li>微服务架构仍然是分布式系统最流行的架构风格。 但 Kubernetes 和云原生运动已经大规模重新定义了应用程序设计和开发。</li>
+<li>在云原生平台上，服务的可观察性是不够的。 更基本的先决条件是通过实施健康检查，对信号做出反应，声明资源消耗等，使微服务自动化。</li>
+<li>在后 Kubernetes 时代，服务网格技术将完全取代使用库来实现操作网络问题（例如 Hystrix 断路器）。</li>
+<li>微服务现在必须通过从多个维度实现幂等性来设计用于“恢复”。</li>
+<li>现代开发人员必须精通编程语言以实现业务功能，并且同样精通云原生技术以满足非功能性基础架构级别要求。</li>
+</ul>
+
+<p>微服务炒作开始于一堆关于组织结构，团队规模，服务规模，重写和抛出服务而不是修复，避免单元测试等的极端想法。根据我的经验，大多数这些想法被证明是错误的，而不是实用的，或者至少一般不适用。 如今，大多数剩余的原则和实践都是如此通用和松散地定义，以至于它们在未来许多年都会成立，而在实践中却没有多大意义。</p>
+
+<p>在 Kubernetes 诞生之前几年被采用，微服务仍然是分布式系统最流行的架构风格。 但 Kubernetes 和云原生运动已经大规模重新定义了应用程序设计和开发的某些方面。 在本文中，我想质疑一些原始的微服务理念，并承认它们在后 Kubernetes 时代并不像以前那样强大。</p>
+
+<h2 id="不仅可观察-而且还有自动化服务">不仅可观察，而且还有自动化服务</h2>
+
+<p>可观察性从一开始就是微服务的基本原则。 虽然对于一般的分布式系统来说它是正确的，但今天（特别是在 Kubernetes 上），它的很大一部分是平台级别的开箱即用（例如进程运行状况检查，CPU 和内存消耗）。 最低要求是应用程序以 JSON 格式登录控制台。 从那时起，平台可以跟踪资源消耗，请求跟踪，收集所有类型的指标，错误率等，而无需太多的服务级别开发工作。</p>
+
+<p>在云原生平台上，可观察性是不够的。 更基本的先决条件是通过实施健康检查，对信号做出反应，声明资源消耗等使微服务<a href="https://www.redhat.com/en/resources/cloud-native-container-design-whitepaper">自动化</a> 。可以将几乎任何应用程序放入容器中并运行它。 但是要创建一个容器化的应用程序，可以通过云原生平台自动化和协调编排，需要遵循一定的规则。 遵循这些 <a href="https://leanpub.com/k8spatterns/">原则和模式</a> ，将确保生成的容器在大多数容器编排引擎中表现得像一个优秀的云本地公民，允许以自动方式对它们进行调度，扩展和监视。</p>
+
+<p>我们希望平台不必观察服务中发生的情况，而是希望平台检测异常情况并按照声明进行协调。 无论是通过停止将流量引导到服务实例，重新启动，向上和向下扩展，还是将服务移动到另一个健康的主机，重试失败的请求或其他，这都无关紧要。 如果服务是自动化的，则所有纠正措施都会自动发生，我们只需要描述所需的状态，而不是观察和反应。 服务应该是可观察的，但也可以在没有人为干预的情况下通过平台进行整改。</p>
+
+<h2 id="智能平台和智能服务-但有正确的责任">智能平台和智能服务，但有正确的责任</h2>
+
+<p>在从 SOA 转向微服务世界的过程中， <a href="https://martinfowler.com/articles/microservices.html#SmartEndpointsAndDumbPipes">“智能端点和哑管”</a>的概念是服务交互的另一个根本转变。 在微服务领域，服务不依赖于集中式智能路由层的存在，而是依赖于拥有某些平台级功能的智能端点。 这是通过在每个微服务中嵌入传统 ESB 的一些功能并转换到没有业务逻辑元素的轻量级协议来实现的。</p>
+
+<p>虽然这仍然是在不可靠的网络层（使用 <a href="https://github.com/Netflix/Hystrix">Hystrix</a> 等库 ） 实现服务交互的流行方式 ，但现在，在后 Kubernetes 时代，它已经完全被<a href="https://www.cncf.io/blog/2017/04/26/service-mesh-critical-component-cloud-native-stack/">服务</a>网格技术所取代 。 有趣的是，服务网格甚至比传统的 ESB 更智能。 网格可以执行动态路由、服务发现、基于延迟的负载平衡、响应类型、指标和分布式跟踪、重试、超时，你能想到的这里都有。</p>
+
+<p>与 ESB 的不同之处在于，与服务网格不同的是，只有一个集中路由层，每个微服务通常都有自己的路由器 - 一个带有附加中央管理层的代理逻辑的 sidecar 容器。 更重要的是，管道（平台和服务网格）没有任何业务逻辑; 他们完全专注于基础架构问题，使服务专注于业务逻辑。 如图所示，这代表了 ESB 和微服务学习的演变，以适应云环境的动态和不可靠特性。</p>
+
+<p><a href="https://ws1.sinaimg.cn/large/006tSBxtly1fuwqifjflij31390c9whb.jpg"><img src="https://ws1.sinaimg.cn/large/006tSBxtly1fuwq6pf4fyj30gn057gnd.jpg" alt="" /></a></p>
+
+<p><strong>SOA vs MSA 与 CNA</strong></p>
+
+<p>查看服务的其他方面，我们注意到云原生不仅影响端点和服务交互。 Kubernetes 平台（包含所有其他技术）还负责资源管理，调度，部署，配置管理，扩展，服务交互等。而不是再次将其称为“智能代理和哑管”，我认为它更好地描述作为一个具有正确职责的智能平台和智能服务。 这不仅仅是关于端点; 它是一个完整的平台，可以自动化主要关注业务功能的服务的所有基础架构方面。</p>
+
+<h2 id="不要设计失败-设计恢复">不要设计失败，设计恢复</h2>
+
+<p>在基础架构和网络本身不可靠的云原生环境中运行的微服务必须针对故障进行设计。 毫无疑问。 但是平台检测到并处理了越来越多的故障，并且从微服务中捕获故障的量较少。 相反，考虑通过从多个维度实现幂等性来设计您的恢复服务。</p>
+
+<p>容器技术，容器协调器和服务网络可以检测并从许多故障中恢复：无限循环 - CPU 分配，内存泄漏和 OOM - 运行状况检查，磁盘占用 - 配额，fork 炸弹 - 进程限制，批量处理和进程隔离 - 内存限制，延迟和基于响应的服务发现，重试，超时，自动扩展等等。更不用说，过渡到无服务器模型，服务只能在几毫秒内处理一个请求，关注垃圾收集，线程池，资源泄漏也越来越不相关&hellip;&hellip;</p>
+
+<p>通过平台处理所有这些以及更多内容，将您的服务视为一个密封的黑盒子，它将多次启动和停止 - 使服务能够重新启动。 您的服务将按比例放大和缩小倍数 - 通过使其无状态，使其可以安全地进行扩展。 假设许多传入请求最终会超时 - 使端点具有幂等性。 假设许多传出请求将暂时失败，平台将为您重试它们 - 确保您使用幂等服务。</p>
+
+<p>为了适合云原生环境中的自动化，服务必须是：</p>
+
+<ul>
+<li>幂等重启（服务可以被杀死并多次启动）。</li>
+<li>幂等扩展/缩小（服务可以自动扩展到多个实例）。</li>
+<li>幂等服务生产者（其他服务可能会重试调用）。</li>
+<li>幂等服务使用者（服务或网状网可以重试传出调用）。</li>
+</ul>
+
+<p>如果您执行上述操作一次或多次时服务的行为始终相同，那么平台将能够在没有人为干预的情况下从故障中恢复您的服务。</p>
+
+<p>最后，请记住，平台提供的所有恢复只是本地优化。 <a href="http://blog.christianposta.com/microservices/application-safety-and-correctness-cannot-be-offloaded-to-istio-or-any-service-mesh/">正如 Christian Posta 所说的那样</a> ，分布式系统中的应用程序安全性和正确性仍然是应用程序的责任。 整个业务流程范围的思维模式（可能跨越多个服务）对于设计整体稳定的系统是必要的。</p>
+
+<h2 id="混合开发职责">混合开发职责</h2>
+
+<p>越来越多的微服务原则被 Kubernetes 及其补充项目实施和提供。 因此，开发人员必须精通编程语言以实现业务功能，并且同样精通云原生技术以满足非功能性基础架构级别要求，同时完全实现功能。</p>
+
+<p>业务需求和基础架构（操作或跨功能需求或系统质量属性）之间的界限总是模糊不清，并且不可能采取一个方面并期望其他人做另一个方面。 例如，如果在服务网格层中实现重试逻辑，则必须使服务中的业务逻辑或数据库层使用的服务具有幂等性。 如果在服务网格级别使用超时，则必须同步服务中的服务使用者超时。 如果必须实现服务的重复执行，则必须配置 Kubernetes 作业以执行时间执行。</p>
+
+<p>展望未来，一些服务功能将作为业务逻辑在服务中实现，而其他服务功能则作为平台功能提供。 虽然使用正确的工具来完成正确的任务是一个很好的责任分离，但技术的激增极大地增加了整体的复杂性。 在业务逻辑方面实现简单的服务需要很好地理解分布式技术堆栈，因为责任分散在每一层。</p>
+
+<p>据 <a href="https://kubernetes.io/blog/2016/03/1000-nodes-and-beyond-updates-to-kubernetes-performance-and-scalability-in-12/">证实</a> Kubernetes 是可以扩展到数千个节点、数万个 pod 和数百万的 TPS。您的应用程序大小、复杂性，或者说是引入“云原生”复杂性的关键性因素，我还不清楚。</p>
+
+<h2 id="结论">结论</h2>
+
+<p>有趣的是，微服务运动如何为采用 Docker 和 Kubernetes 等容器技术提供了如此大的动力。 虽然最初是推动这些技术发展的微服务实践，但现在 Kubernetes 定义了微服务架构的原则和实践。</p>
+
+<p>作为最近的一个例子，我们距离接受函数模型作为有效的微服务原语并不远，而不是将其视为纳米服务的反模式。 我们并没有充分质疑云原生技术对于中小型案例的实用性和适用性，而是因为兴奋而有些不经意地跳了起来。</p>
+
+<p>Kubernetes 拥有 ESB 和微服务的许多知识，因此，它是最终的分布式系统平台。 它是定义建筑风格的技术，而不是相反的方式。 无论好坏，只有时间会显示出来。</p>
+
+<h2 id="关于作者">关于作者</h2>
+
+<p><strong><img src="https://ws1.sinaimg.cn/large/006tSBxtly1fuwq6p5tm2j302d02sq2y.jpg" alt="" />Bilgin Ibryam</strong>  （@bibryam）是 Red Hat 的首席架构师，提交者和 ASF 成员。 他是一名开源传播者，博客作者，《Camel Design Patterns》 和 《Kubernetes Patterns》 书籍的作者。 在他的日常工作中，Bilgin 喜欢指导编码和领导开发人员成功构建云原生解决方案。 他目前的工作重点是应用程序集成、分布式系统、消息传递、微服务、devops 和一般的云原生挑战。 你可以在  <a href="https://twitter.com/bibryam">Twitter</a>  ，  <a href="https://uk.linkedin.com/in/bibryam">Linkedin</a>  或他的  <a href="http://www.ofbizian.com/">博客</a> 上找到他 。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/envoy-service-mesh-cascading-failure/" data-toggle="tooltip" data-placement="top" title="使用 Kubernetes 和 Istio 进行基于容器的全面服务监控">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/serverless-vs-containers/" data-toggle="tooltip" data-placement="top" title="无服务器与容器">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Tue Sep 4, 2018</h4>
+    </section>
+    <h5 id="wc">300 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

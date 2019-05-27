@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Jhipster 项目之架构分析之gradle.properteis - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="Jhipster 项目之架构分析之gradle.properteis" />
+  <meta name="twitter:title" content="Jhipster 项目之架构分析之gradle.properteis" />
+  <meta name="description" content="gradle 的属性配置文件，可以直接在gradle.build中的代码project.hasProperty判断处理。
+rootProject.name=demo profile=dev # Build properties node_version=10.14.1 npm_version=6.4.1 yarn_version=1.12.3 # Dependency versions jhipster_dependencies_version=2.0.29 # The spring-boot version should match the one managed by # https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster_dependencies_version} spring_boot_version=2.0.7.RELEASE # The hibernate version should match the one managed by # https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} --&gt; hibernate_version=5.2.17.Final mapstruct_version=1.2.0.Final liquibase_hibernate5_version=3.6 liquibaseTaskPrefix=liquibase ## below are some of the gradle performance improvement settings that can be used as required, these are not enabled by default ## The Gradle daemon aims to improve the startup and execution time of Gradle.">
+  <meta property="og:description" content="gradle 的属性配置文件，可以直接在gradle.build中的代码project.hasProperty判断处理。
+rootProject.name=demo profile=dev # Build properties node_version=10.14.1 npm_version=6.4.1 yarn_version=1.12.3 # Dependency versions jhipster_dependencies_version=2.0.29 # The spring-boot version should match the one managed by # https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster_dependencies_version} spring_boot_version=2.0.7.RELEASE # The hibernate version should match the one managed by # https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} --&gt; hibernate_version=5.2.17.Final mapstruct_version=1.2.0.Final liquibase_hibernate5_version=3.6 liquibaseTaskPrefix=liquibase ## below are some of the gradle performance improvement settings that can be used as required, these are not enabled by default ## The Gradle daemon aims to improve the startup and execution time of Gradle.">
+  <meta name="twitter:description" content="gradle 的属性配置文件，可以直接在gradle.build中的代码project.hasProperty判断处理。
+rootProject.name=demo profile=dev # Build properties node_version=10.14.1 npm_version=6.4.1 yarn_version=1.12.3 # Dependency versions …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/jhipster-gradle-properties/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/jhipster-gradle-properties/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Jhipster 项目之架构分析之gradle.properteis</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">300 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                <p>gradle 的属性配置文件，可以直接在gradle.build中的代码project.hasProperty判断处理。</p>
+
+<pre><code class="language-properteis">rootProject.name=demo
+profile=dev
+
+# Build properties
+node_version=10.14.1
+npm_version=6.4.1
+yarn_version=1.12.3
+
+# Dependency versions
+jhipster_dependencies_version=2.0.29
+# The spring-boot version should match the one managed by
+# https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster_dependencies_version}
+spring_boot_version=2.0.7.RELEASE
+# The hibernate version should match the one managed by
+# https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} --&gt;
+hibernate_version=5.2.17.Final
+mapstruct_version=1.2.0.Final
+
+liquibase_hibernate5_version=3.6
+liquibaseTaskPrefix=liquibase
+
+## below are some of the gradle performance improvement settings that can be used as required, these are not enabled by default
+
+## The Gradle daemon aims to improve the startup and execution time of Gradle.
+## The daemon is enabled by default in Gradle 3+ setting this to false will disable this.
+## TODO: disable daemon on CI, since builds should be clean and reliable on servers
+## https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:ways_to_disable_gradle_daemon
+## un comment the below line to disable the daemon
+
+#org.gradle.daemon=false
+
+## Specifies the JVM arguments used for the daemon process.
+## The setting is particularly useful for tweaking memory settings.
+## Default value: -Xmx1024m -XX:MaxPermSize=256m
+## un comment the below line to override the daemon defaults
+
+#org.gradle.jvmargs=-Xmx1024m -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+
+## When configured, Gradle will run in incubating parallel mode.
+## This option should only be used with decoupled projects. More details, visit
+## http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects
+## un comment the below line to enable parallel mode
+
+#org.gradle.parallel=true
+
+## Enables new incubating mode that makes Gradle selective when configuring projects.
+## Only relevant projects are configured which results in faster builds for large multi-projects.
+## http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:configuration_on_demand
+## un comment the below line to enable the selective mode
+
+#org.gradle.configureondemand=true
+
+</code></pre>
+
+<p>由于本篇幅比较简单，本篇文章就到次结束。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/jhipster-gradlew-sh/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之gradlew">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/jhipster-gitignore/" data-toggle="tooltip" data-placement="top" title="Jhipster 项目之架构分析之gitignore">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Feb 25, 2019</h4>
+    </section>
+    <h5 id="wc">300 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

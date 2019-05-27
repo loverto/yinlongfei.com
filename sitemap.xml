@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-postcss.config/</loc>
+    <lastmod>2019-05-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/</loc>
+    <lastmod>2019-05-25T20:18:57+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/</loc>
+    <lastmod>2019-05-25T20:18:57+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/categories/</loc>
+    <lastmod>2019-03-05T20:18:57+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/knative/</loc>
+    <lastmod>2019-03-05T20:18:57+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/</loc>
+    <lastmod>2019-03-05T20:18:57+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/kubernetes/</loc>
+    <lastmod>2019-03-05T20:18:57+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/categories/translation/</loc>
+    <lastmod>2019-03-05T20:18:57+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/hands-on-knative-part-2/</loc>
+    <lastmod>2019-03-05T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/hands-on-knative-part-1/</loc>
+    <lastmod>2019-03-04T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-editorconfig/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-angular-cli/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-gradle/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-gitattribute/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-gitignore/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-gradle-properties/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-gradlew-sh/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-gradlew.bat/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-architecture/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-huskrc/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-packge.json/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-prettier/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/jhipster-yo-rc/</loc>
+    <lastmod>2019-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/cilium-14/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/cilium/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/dns/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/encryption/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/istio/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/microservices/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/monitor/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/multi-cluster/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/multi-mesh/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/tracing/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/tags/vs/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/back-to-microservices-with-istio-p1/</loc>
+    <lastmod>2019-02-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/serverless-vs-containers/</loc>
+    <lastmod>2018-09-15T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/microservices-post-kubernetes/</loc>
+    <lastmod>2018-09-04T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/envoy-service-mesh-cascading-failure/</loc>
+    <lastmod>2018-08-30T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/istio-service-mesh-tech-boosts-kubernetes-work-with-trade-offs/</loc>
+    <lastmod>2018-08-02T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/spring5-technology-insider-one-part/</loc>
+    <lastmod>2018-07-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/comprehensive-container-based-service-monitoring-with-kubernetes-and-istio/</loc>
+    <lastmod>2018-07-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/service-mesh-architecture-radicalizes-container-networking/</loc>
+    <lastmod>2018-07-01T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/traffic-routing-between-fn-functions-using-fn-project-and-istio-fd/</loc>
+    <lastmod>2018-06-26T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/istio-envoy-cert-manager-lets-encrypt-for-tls/</loc>
+    <lastmod>2018-06-22T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/making-most-out-microservices-service-mesh/</loc>
+    <lastmod>2018-06-19T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/service-mesh-and-cookpad/</loc>
+    <lastmod>2018-06-19T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/springbootservletinitializer%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0web.xml%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2016-07-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/posts/restful-api-design/</loc>
+    <lastmod>2016-02-25T20:18:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yinlongfei.com/about/</loc>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

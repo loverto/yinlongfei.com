@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>istio on 殷龙飞的博客</title>
+    <link>https://yinlongfei.com/tags/istio/</link>
+    <description>Recent content in istio on 殷龙飞的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Tue, 12 Feb 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://yinlongfei.com/tags/istio/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用Istio打造微服务（第1部分）</title>
+      <link>https://yinlongfei.com/posts/back-to-microservices-with-istio-p1/</link>
+      <pubDate>Tue, 12 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://yinlongfei.com/posts/back-to-microservices-with-istio-p1/</guid>
+      <description>Istio 是一个由Google，IBM和Lyft团队合作开发的开源项目，它提供了基于微服务的应用程序复杂性的解决方案，仅举几例：
+ 流量管理 ：超时，重试，负载均衡， 安全性： 最终用户身份验证和授权， 可观察性： 跟踪，监控和记录。  所有这些都可以在应用程序层中解决，但是您的服务不再是“微型”，相对于提供业务价值的资源，实现这些的所有额外工作都是公司资源的压力。我们来举个例子：
+ PM：添加反馈功能需要多长时间？
+开发：两个冲刺（敏捷开发中的术语，一般一个冲刺周期30天）。
+PM：什么&amp;hellip;&amp;hellip;？ 那只是一个CRUD！
+开发：创建CRUD很容易，但我们需要对用户和服务进行身份验证和授权。而且由于网络不可靠，我们需要在客户端实施重试和熔断器，并确保我们不会占用整个系统，我们需要Timeout和Bulkheads，另外还要检测我们需要监控的问题，跟踪[&amp;hellip; ]
+PM：那么我们就把它放在产品服务中吧。哎呀！
+ 你明白了，必须满足所有形式才可以为我们添加一项巨大的服务（有很多不是业务功能的代码）。在本文中，我们将展示Istio如何从我们的服务中删除所有上述交叉问题。
+注意： 本文假设您具有Kubernetes的知识。如果不是这种情况，我建议您阅读 我对Kubernetes的介绍，然后继续阅读本文。
+关于Istio 在没有Istio的世界中，一个服务向另一个服务直接发出请求，并且在发生故障的情况下，服务需要通过重试，超时，打开熔断器等来处理它。
+为了解决这个问题，Istio通过与服务完全分离，并通过拦截所有网络通信来提供一种巧妙的解决方案。这样做可以实现：
+ Fault Tolerance - 使用响应状态代码，它可以在请求失败并重试时理解。 Canary Rollouts - 仅将指定百分比的请求转发到新版本的服务。 监控和指标 - 服务响应所花费的时间。 跟踪和可观察性 - 它在每个请求中添加特殊header，并在集群中跟踪它们。 安全性 - 提取JWT令牌并对用户进行身份验证和授权。  仅举几例（仅举几例），让您感兴趣！ 我们来看一些技术细节吧！
+Istio的架构 Istio拦截所有网络流量，并通过在每个pod中注入智能代理作为sidecar来应用一组规则。启用所有功能的代理包括 数据平面， 并且这些代理可由控制平面 动态配置。
+数据平面 注入的代理使Istio能够轻松满足我们的要求。举个例子，我们来看看重试和熔断器功能。
+总结一下：
+ Envoy将请求发送到服务B的第一个实例，但它失败了。 Envoy sidecar重试。（1） 返回对调用代理的失败请求。 这将打开熔断器并在后续请求中调用下一个服务。（2）  这意味着您不必使用另一个重试库，您不必在编程语言X，Y或Z中开发自己的Circuit Breaking和Service Discovery实现。所有这些都是开箱即用的。这些功能都是通过Istio来实现，你不需要更改代码。
+很好！ 现在你想加入Istio的航行，但你仍然有一些疑虑，一些悬而未决的问题。这是一个一刀切的方案，你对它持怀疑态度，因为它总是最终成为一刀切的无解方案！
+你最终低声说了这个问题：“这是可配置的吗？”</description>
+    </item>
+    
+  </channel>
+</rss>

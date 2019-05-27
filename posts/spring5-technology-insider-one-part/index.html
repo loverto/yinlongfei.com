@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Spring 5 源码分析之Spring技术内幕的读书笔记 - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="Spring 5 源码分析之Spring技术内幕的读书笔记" />
+  <meta name="twitter:title" content="Spring 5 源码分析之Spring技术内幕的读书笔记" />
+  <meta name="description" content="Spring 5 源码分析之Spring技术内幕的读书笔记 再读Spring技术内幕，由于之前没做笔记，再读一次觉得做个记录很有必要，这里会把我看这本书的所看所想做简单地记录，首先发现书中讲的Spring版本太老了，书中的Spring版本讲的是3.x版本的，现在Spring版本已经是5.x了，我会把更新部分的内容同样写出来，这里做个做一个读书笔记，看到少写多少吧，以免到时候忘的干净，第一章讲了Spring家族产品包含那些，例如Spring core，spring bean,spring tx,spring mvc spring android等等，讲了Spring的由来，以及Spring的设计理念。不过接下来第二章比较有意思，开始讲SpringIoc的设计原理，在Spring的Ioc中主要有BeanFactory这个接口，根据这个最原始的容器定义接口分别扩展出不同的接口，
+Spring Ioc容器的实现 这里上一下ioc主要的核心接口设计图
+书中主要讲的一个代表性容器是XmlBeanFactory，比过这个容器在5.X时已经设置为不推荐使用的状态，这个类的继承实现类图如下所示，从注释上来看，这个类在3.1时已经不推荐用了，推荐直接用DefaultListableBeanFactory
+@Deprecated @SuppressWarnings({&quot;serial&quot;, &quot;all&quot;}) public class XmlBeanFactory extends DefaultListableBeanFactory { private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this); /** * Create a new XmlBeanFactory with the given resource, * which must be parsable using DOM. * @param resource the XML resource to load bean definitions from * @throws BeansException in case of loading or parsing errors */ public XmlBeanFactory(Resource resource) throws BeansException { this(resource, null); } /** * Create a new XmlBeanFactory with the given input stream, * which must be parsable using DOM.">
+  <meta property="og:description" content="Spring 5 源码分析之Spring技术内幕的读书笔记 再读Spring技术内幕，由于之前没做笔记，再读一次觉得做个记录很有必要，这里会把我看这本书的所看所想做简单地记录，首先发现书中讲的Spring版本太老了，书中的Spring版本讲的是3.x版本的，现在Spring版本已经是5.x了，我会把更新部分的内容同样写出来，这里做个做一个读书笔记，看到少写多少吧，以免到时候忘的干净，第一章讲了Spring家族产品包含那些，例如Spring core，spring bean,spring tx,spring mvc spring android等等，讲了Spring的由来，以及Spring的设计理念。不过接下来第二章比较有意思，开始讲SpringIoc的设计原理，在Spring的Ioc中主要有BeanFactory这个接口，根据这个最原始的容器定义接口分别扩展出不同的接口，
+Spring Ioc容器的实现 这里上一下ioc主要的核心接口设计图
+书中主要讲的一个代表性容器是XmlBeanFactory，比过这个容器在5.X时已经设置为不推荐使用的状态，这个类的继承实现类图如下所示，从注释上来看，这个类在3.1时已经不推荐用了，推荐直接用DefaultListableBeanFactory
+@Deprecated @SuppressWarnings({&quot;serial&quot;, &quot;all&quot;}) public class XmlBeanFactory extends DefaultListableBeanFactory { private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this); /** * Create a new XmlBeanFactory with the given resource, * which must be parsable using DOM. * @param resource the XML resource to load bean definitions from * @throws BeansException in case of loading or parsing errors */ public XmlBeanFactory(Resource resource) throws BeansException { this(resource, null); } /** * Create a new XmlBeanFactory with the given input stream, * which must be parsable using DOM.">
+  <meta name="twitter:description" content="Spring 5 源码分析之Spring技术内幕的读书笔记 再读Spring技术内幕，由于之前没做笔记，再读一次觉得做个记录很有必要，这里会把我看这本书的所看所想做简单地记录，首先发现书中讲的Spring版本太老了，书中的Spring版本讲的是3.x版本的，现在Spring版本已经是5.x了，我会把更新部分的内容同样写出来，这里做个做一个读书笔记，看到少写多少吧，以免到时候忘的干净，第一章讲 …">
+  <meta name="author" content="殷龙飞"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://yinlongfei.com/posts/spring5-technology-insider-one-part/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="殷龙飞的博客" />
+
+  <meta name="generator" content="Hugo 0.56.0-DEV" />
+  <link rel="canonical" href="https://yinlongfei.com/posts/spring5-technology-insider-one-part/" />
+  <link rel="alternate" href="https://yinlongfei.com/index.xml" type="application/rss+xml" title="殷龙飞的博客">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://yinlongfei.com/css/main.css" />
+  <link rel="stylesheet" href="https://yinlongfei.com/css/search.css" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-125320928-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://yinlongfei.com/">殷龙飞的博客</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="新书" href="/books/">新书</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/archives/">归档</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/about/">关于</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Spring 5 源码分析之Spring技术内幕的读书笔记</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Wed Jul 25, 2018</h4>
+    </section>
+    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                
+
+<h1 id="spring-5-源码分析之spring技术内幕的读书笔记">Spring 5 源码分析之Spring技术内幕的读书笔记</h1>
+
+<p>再读Spring技术内幕，由于之前没做笔记，再读一次觉得做个记录很有必要，这里会把我看这本书的所看所想做简单地记录，首先发现书中讲的Spring版本太老了，书中的Spring版本讲的是3.x版本的，现在Spring版本已经是5.x了，我会把更新部分的内容同样写出来，这里做个做一个读书笔记，看到少写多少吧，以免到时候忘的干净，第一章讲了Spring家族产品包含那些，例如Spring core，spring bean,spring tx,spring mvc
+spring android等等，讲了Spring的由来，以及Spring的设计理念。不过接下来第二章比较有意思，开始讲SpringIoc的设计原理，在Spring的Ioc中主要有BeanFactory这个接口，根据这个最原始的容器定义接口分别扩展出不同的接口，</p>
+
+<h2 id="spring-ioc容器的实现">Spring Ioc容器的实现</h2>
+
+<p>这里上一下ioc主要的核心接口设计图</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/61411417ly1g09vg7b00tj21210cy74t.jpg" alt="Spring Ioc 核心接口类图" /></p>
+
+<p>书中主要讲的一个代表性容器是XmlBeanFactory，比过这个容器在5.X时已经设置为不推荐使用的状态，这个类的继承实现类图如下所示，从注释上来看，这个类在3.1时已经不推荐用了，推荐直接用DefaultListableBeanFactory</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/61411417ly1g09vnrgsjij21140jfab6.jpg" alt="XmlBeanFactory类图" /></p>
+
+<pre><code class="language-java">@Deprecated
+@SuppressWarnings({&quot;serial&quot;, &quot;all&quot;})
+public class XmlBeanFactory extends DefaultListableBeanFactory {
+
+	private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);
+
+
+	/**
+	 * Create a new XmlBeanFactory with the given resource,
+	 * which must be parsable using DOM.
+	 * @param resource the XML resource to load bean definitions from
+	 * @throws BeansException in case of loading or parsing errors
+	 */
+	public XmlBeanFactory(Resource resource) throws BeansException {
+		this(resource, null);
+	}
+
+	/**
+	 * Create a new XmlBeanFactory with the given input stream,
+	 * which must be parsable using DOM.
+	 * @param resource the XML resource to load bean definitions from
+	 * @param parentBeanFactory parent bean factory
+	 * @throws BeansException in case of loading or parsing errors
+	 */
+	public XmlBeanFactory(Resource resource, BeanFactory parentBeanFactory) throws BeansException {
+		super(parentBeanFactory);
+		this.reader.loadBeanDefinitions(resource);
+	}
+
+}
+
+</code></pre>
+
+<p>可以看到核心代码并不是很多，因为大部分的实现代码都在父类中，这样我们就知道，如果直接用父类该如何操作了。</p>
+
+<p>在讲ApplicationContext容器时，从FileSystemXmlApplicationContext这个具体的实现来说明，ApplicationContext可以完成的功能，</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/61411417ly1g09w09kqzvj21950jot9z.jpg" alt="FileSystemXmlApplicationContext类图" /></p>
+
+<p>本类的核心作用，实例化应用上下文的支持，并且启动IOC的refresh过程</p>
+
+<pre><code class="language-java">	public FileSystemXmlApplicationContext(
+			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
+			throws BeansException {
+
+		super(parent);
+		setConfigLocations(configLocations);
+		if (refresh) {
+			refresh();
+		}
+	}
+</code></pre>
+
+<h2 id="容器的初始化过程">容器的初始化过程</h2>
+
+<p>Ioc容器的初始化有个入口，入口就是这个refresh()方法，这个入口方法中包含了，Resource定位，载入和注册。
+IOC的核心存储数据结构是HashMap
+refresh在AbstractApplicationContext 的类中，方法里面主要的内容如下
+<img src="https://ws1.sinaimg.cn/large/61411417ly1g0d9s6r5wjj20m50pxad0.jpg" alt="refresh" /></p>
+
+<p>这篇博客内容已经不短了，下面的内容，我们在下篇继续说</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://yinlongfei.com/posts/comprehensive-container-based-service-monitoring-with-kubernetes-and-istio/" data-toggle="tooltip" data-placement="top" title="使用 Kubernetes 和 Istio 进行基于容器的全面服务监控">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://yinlongfei.com/posts/istio-service-mesh-tech-boosts-kubernetes-work-with-trade-offs/" data-toggle="tooltip" data-placement="top" title="衡取 Istio 服务网格基于 Kubernetes 工作的优缺点">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Wed Jul 25, 2018</h4>
+    </section>
+    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              殷龙飞
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://yinlongfei.com/">殷龙飞的博客</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.56.0-DEV</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+
