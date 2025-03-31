@@ -1,0 +1,37 @@
+.donate {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd;
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+}
+
+.donate-toggle {
+    color: #007bff;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+.donate-toggle:hover {
+    text-decoration: underline;
+}
+
+.donate-buttons {
+    margin-top: 15px;
+    display: flex;           /* 使用 flex 布局 */
+    justify-content: center; /* 居中对齐 */
+    gap: 20px;              /* 图片间距 */
+}
+
+.donate-buttons img {
+    width: 250px;           /* 增大图片尺寸 */
+    height: auto;           /* 保持比例 */
+    opacity: 0.9;
+    border: 1px solid #eee; /* 添加边框提升清晰度 */
+    border-radius: 5px;
+}
+
+.donate-buttons img:hover {
+    opacity: 1;
+}
